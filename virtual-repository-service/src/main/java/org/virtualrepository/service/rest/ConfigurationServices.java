@@ -59,9 +59,20 @@ public class ConfigurationServices extends AbstractVirtualRepositoryServices {
 	@GET
 	@Path("/info")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response info() {
+	public Response getJSONInfo() {
 		try {
 			return this.jsonResponse(this._config);
+		} catch (Throwable t) {
+			return this.handleError(t);
+		}
+	}
+	
+	@GET
+	@Path("/info")
+	@Produces(MediaType.APPLICATION_XML)
+	public Response getXMLInfo() {
+		try {
+			return this.xmlResponse(this._config);
 		} catch (Throwable t) {
 			return this.handleError(t);
 		}

@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.dynamicvalues.Dynamic;
 import org.virtualrepository.AssetType;
@@ -20,6 +21,8 @@ import org.virtualrepository.csv.CsvCodelist;
 import org.virtualrepository.impl.Repository;
 import org.virtualrepository.sdmx.SdmxCodelist;
 import org.virtualrepository.spi.ServiceProxy;
+
+import com.thoughtworks.xstream.XStream;
 
 import flexjson.JSONSerializer;
 
@@ -39,11 +42,15 @@ import flexjson.JSONSerializer;
 abstract public class AbstractVirtualRepositoryServices {
 	static private VirtualRepository REPO;
 	
-	static protected String[] JSON_DEFAULT_EXCLUSION_PATTERNS = { "class", "*.class" };
-	
+	static private String[] JSON_DEFAULT_EXCLUSION_PATTERNS = { "class", "*.class" };
+	static private XStream XSTREAM;
 	static {
 		REPO = new Repository();
 		REPO.discover(CsvCodelist.type, SdmxCodelist.type);
+		
+		XSTREAM = new XStream();
+		XSTREAM.omitField(RepositoryService.class, "proxy");
+		XSTREAM.setMode(XStream.ID_REFERENCES);
 	}
 	
 	protected VirtualRepository repository() {
@@ -81,8 +88,12 @@ abstract public class AbstractVirtualRepositoryServices {
 		return Response.status(Response.Status.OK).entity(this.jsonify(object, exclusionPatterns)).build();
 	}
 	
+	protected Response xmlResponse(Object object, String... exclusionPatterns) throws Exception {
+		return Response.status(Response.Status.OK).entity(XSTREAM.toXML(object)).build();
+	}
+	
 	protected Response handleError(Throwable t) {
-		return this.error(Response.Status.INTERNAL_SERVER_ERROR, t.getMessage());
+		return this.status(Response.Status.INTERNAL_SERVER_ERROR, t.getMessage());
 	}
 	
 	protected Response badRequest() {
@@ -90,7 +101,7 @@ abstract public class AbstractVirtualRepositoryServices {
 	}
 	
 	protected Response badRequest(String message) {
-		return this.error(Response.Status.BAD_REQUEST, message);
+		return this.status(Response.Status.BAD_REQUEST, message);
 	}
 	
 	protected Response notFound() {
@@ -98,7 +109,7 @@ abstract public class AbstractVirtualRepositoryServices {
 	}
 	
 	protected Response notFound(String message) {
-		return this.error(Response.Status.NOT_FOUND, message);
+		return this.status(Response.Status.NOT_FOUND, message);
 	}
 	
 	protected Response error() {
@@ -106,10 +117,19 @@ abstract public class AbstractVirtualRepositoryServices {
 	}
 	
 	protected Response error(String message) {
-		return this.error(Response.Status.INTERNAL_SERVER_ERROR, message);
+		return this.status(Response.Status.INTERNAL_SERVER_ERROR, message);
 	}
 	
-	protected Response error(Response.Status code, String message) {
-		return Response.status(code).entity(message == null ? "" : message).build();
+	protected Response status(Response.Status code) {
+		return this.status(code, null);
+	}
+	
+	protected Response status(Response.Status code, String message) {
+		ResponseBuilder builder = Response.status(code);
+		
+		if(message != null)
+			builder.entity(message);
+		
+		return builder.build();
 	}
 }

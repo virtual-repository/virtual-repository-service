@@ -77,37 +77,56 @@ public class AssetsServices extends AbstractVirtualRepositoryServices {
 		return this;
 	}
 	
+	private Collection<Asset> doGetAssets(@Context UriInfo info) {
+		Collection<AssetType> requestedAssetTypes = new ArrayList<AssetType>();
+
+		AssetType[] availableAssetTypes = availableTypes();
+		
+		List<String> requestedAssetTypesParameterValues = info.getQueryParameters().get("assetType");
+		
+		if(requestedAssetTypesParameterValues != null)
+			for(String requestedAssetType : requestedAssetTypesParameterValues) {
+				requestedAssetTypes.add(TypeUtilities.forName(availableAssetTypes, requestedAssetType));
+			}
+		
+		Collection<Asset> assets = new ArrayList<Asset>();
+
+		if(requestedAssetTypes.isEmpty())
+			requestedAssetTypes = Arrays.asList(availableAssetTypes);
+		
+		Collection<Asset> byType;
+		for(AssetType type : requestedAssetTypes) {
+			byType = this._assets.get(type);
+			
+			if(byType != null)
+				for(Asset asset : byType)
+					assets.add(asset);
+		}
+
+		return assets;
+	}
+	
+	private Collection<Asset> doGetUpdatedAssets(UriInfo info) {
+		return this.updateAssets().doGetAssets(info);
+	}
+	
 	@GET
 	@Path("/meta")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAssets(@Context UriInfo info) {
+	public Response getJSONAssets(@Context UriInfo info) {
 		try {
-			Collection<AssetType> requestedAssetTypes = new ArrayList<AssetType>();
-
-			AssetType[] availableAssetTypes = availableTypes();
-			
-			List<String> requestedAssetTypesParameterValues = info.getQueryParameters().get("assetType");
-			
-			if(requestedAssetTypesParameterValues != null)
-				for(String requestedAssetType : requestedAssetTypesParameterValues) {
-					requestedAssetTypes.add(TypeUtilities.forName(availableAssetTypes, requestedAssetType));
-				}
-			
-			Collection<Asset> assets = new ArrayList<Asset>();
-
-			if(requestedAssetTypes.isEmpty())
-				requestedAssetTypes = Arrays.asList(availableAssetTypes);
-			
-			Collection<Asset> byType;
-			for(AssetType type : requestedAssetTypes) {
-				byType = this._assets.get(type);
-				
-				if(byType != null)
-					for(Asset asset : byType)
-						assets.add(asset);
-			}
-
-			return this.jsonResponse(assets);
+			return this.jsonResponse(this.doGetAssets(info));
+		} catch (Throwable t) {
+			return this.handleError(t);
+		}
+	}
+	
+	@GET
+	@Path("/meta")
+	@Produces(MediaType.APPLICATION_XML)
+	public Response getXMLAssets(@Context UriInfo info) {
+		try {
+			return this.xmlResponse(this.doGetAssets(info));
 		} catch (Throwable t) {
 			return this.handleError(t);
 		}
@@ -116,7 +135,22 @@ public class AssetsServices extends AbstractVirtualRepositoryServices {
 	@POST
 	@Path("/meta")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUpdatedAssets(@Context UriInfo info) {
-		return this.updateAssets().getAssets(info);
+	public Response getJSONUpdatedAssets(@Context UriInfo info) {
+		try {
+			return this.jsonResponse(this.doGetUpdatedAssets(info));
+		} catch (Throwable t) {
+			return this.handleError(t);
+		}
+	}
+	
+	@POST
+	@Path("/meta")
+	@Produces(MediaType.APPLICATION_XML)
+	public Response getXMLUpdatedAssets(@Context UriInfo info) {
+		try {
+			return this.xmlResponse(this.doGetUpdatedAssets(info));
+		} catch (Throwable t) {
+			return this.handleError(t);
+		}
 	}
 }
