@@ -32,6 +32,6 @@ final public class TypeUtilities {
 			if(type.name().equals(name))
 				return type;
 		
-		throw new RuntimeException("Unknown / unavailable asset type name " + name);
+		throw new RuntimeException("Unknown / unavailable asset type '" + name + "'");
 	}
 }
