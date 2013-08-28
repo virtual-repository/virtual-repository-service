@@ -1,7 +1,7 @@
 /**
  * (c) 2013 FAO / UN (project: virtual-repository-service)
  */
-package org.virtualrepository.rest.rest;
+package org.virtualrepository.service.rest;
 
 import static org.dynamicvalues.Directives.all;
 import static org.dynamicvalues.Directives.by;

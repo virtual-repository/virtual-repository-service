@@ -1,7 +1,7 @@
 /**
  * (c) 2013 FAO / UN (project: virtual-repository-service)
  */
-package org.virtualrepository.rest.utils;
+package org.virtualrepository.service.utils;
 
 import org.virtualrepository.AssetType;
 

@@ -1,7 +1,7 @@
 /**
  * (c) 2013 FAO / UN (project: virtual-repository-service)
  */
-package org.virtualrepository.rest.rest;
+package org.virtualrepository.service.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
