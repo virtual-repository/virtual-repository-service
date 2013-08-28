@@ -1,7 +1,7 @@
 /**
  * (c) 2013 FAO / UN (project: virtual-repository-service)
  */
-package org.virtualrepository.service.rest;
+package org.virtualrepository.rest.rest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +21,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.virtualrepository.Asset;
 import org.virtualrepository.AssetType;
-import org.virtualrepository.service.utils.TypeUtilities;
+import org.virtualrepository.rest.utils.TypeUtilities;
 
 import com.sun.jersey.spi.resource.Singleton;
 

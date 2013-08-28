@@ -1,7 +1,7 @@
 /**
  * (c) 2013 FAO / UN (project: virtual-repository-service)
  */
-package org.virtualrepository.service.rest;
+package org.virtualrepository.rest.rest;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.virtualrepository.AssetType;
-import org.virtualrepository.service.model.ConfigurationData;
+import org.virtualrepository.rest.model.ConfigurationData;
 
 import com.sun.jersey.spi.resource.Singleton;
 

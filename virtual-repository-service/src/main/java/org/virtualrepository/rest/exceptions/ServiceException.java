@@ -1,7 +1,7 @@
 /**
  * (c) 2013 FAO / UN (project: virtual-repository-service)
  */
-package org.virtualrepository.service.exceptions;
+package org.virtualrepository.rest.exceptions;
 
 /**
  * Place your class / interface description here.
