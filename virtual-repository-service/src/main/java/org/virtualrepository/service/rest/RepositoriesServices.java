@@ -54,4 +54,15 @@ public class RepositoriesServices extends AbstractVirtualRepositoryServices {
 			return this.handleError(t);
 		}
 	}
+	
+	@GET
+	@Path("/meta")
+	@Produces(RequestConstants.APPLICATION_VXML)
+	public Response getVXMLRepositories() {
+		try {
+			return this.vxmlResponse(this.doGetServices());
+		} catch(Throwable t) {
+			return this.handleError(t);
+		}
+	}
 }

@@ -10,11 +10,11 @@
 			<param-name>com.sun.jersey.config.property.packages</param-name>
 			<param-value>org.virtualrepository.service.rest</param-value>
 		</init-param>
-		<load-on-startup>-1</load-on-startup>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>Virtual Repository Service</servlet-name>
+		<servlet-name>Virtual Repository REST Service</servlet-name>
 		<url-pattern>/vrs/*</url-pattern>
 	</servlet-mapping>
 </web-app>

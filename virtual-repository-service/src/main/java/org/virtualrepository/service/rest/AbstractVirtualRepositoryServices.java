@@ -6,14 +6,20 @@ package org.virtualrepository.service.rest;
 import static org.dynamicvalues.Directives.all;
 import static org.dynamicvalues.Directives.by;
 import static org.dynamicvalues.Directives.type;
+import static org.dynamicvalues.Dynamic.externalValueOf;
 
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashSet;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 
 import org.dynamicvalues.Dynamic;
+import org.dynamicvalues.DynamicIO;
 import org.virtualrepository.AssetType;
 import org.virtualrepository.RepositoryService;
 import org.virtualrepository.VirtualRepository;
@@ -44,6 +50,8 @@ abstract public class AbstractVirtualRepositoryServices {
 	
 	static private String[] JSON_DEFAULT_EXCLUSION_PATTERNS = { "class", "*.class" };
 	static private XStream XSTREAM;
+	static private JAXBContext JAXB_CONTEXT;
+	
 	static {
 		REPO = new Repository();
 		REPO.discover(CsvCodelist.type, SdmxCodelist.type);
@@ -51,6 +59,8 @@ abstract public class AbstractVirtualRepositoryServices {
 		XSTREAM = new XStream();
 		XSTREAM.omitField(RepositoryService.class, "proxy");
 		XSTREAM.setMode(XStream.ID_REFERENCES);
+		
+		JAXB_CONTEXT = DynamicIO.newInstance();
 	}
 	
 	protected VirtualRepository repository() {
@@ -79,17 +89,37 @@ abstract public class AbstractVirtualRepositoryServices {
 				   deepSerialize(Dynamic.valueOf(object, 
 						   						 by().excluding(all(type(ServiceProxy.class)))));
 	}
+
+	protected String xmlify(Object object) throws Exception {
+		StringWriter writer = new StringWriter();
+		Marshaller m = JAXB_CONTEXT.createMarshaller();
+		m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+		
+		m.marshal(externalValueOf(object), writer);
+		
+		writer.flush();
+		
+		return writer.toString();
+	}
+	
+	protected String vxmlify(Object object) throws Exception {
+		return XSTREAM.toXML(object);
+	}
 	
 	protected Response jsonResponse(Object object) throws Exception {
 		return this.jsonResponse(object, (String[])null);
 	}
 	
 	protected Response jsonResponse(Object object, String... exclusionPatterns) throws Exception {
-		return Response.status(Response.Status.OK).entity(this.jsonify(object, exclusionPatterns)).build();
+		return Response.ok(this.jsonify(object, exclusionPatterns), MediaType.APPLICATION_JSON).build();
 	}
 	
-	protected Response xmlResponse(Object object, String... exclusionPatterns) throws Exception {
-		return Response.status(Response.Status.OK).entity(XSTREAM.toXML(object)).build();
+	protected Response xmlResponse(Object object) throws Exception {
+		return Response.ok(this.xmlify(object), MediaType.APPLICATION_XML).build();
+	}
+	
+	protected Response vxmlResponse(Object object) throws Exception {
+		return Response.ok(this.vxmlify(object), RequestConstants.APPLICATION_VXML).build();
 	}
 	
 	protected Response handleError(Throwable t) {

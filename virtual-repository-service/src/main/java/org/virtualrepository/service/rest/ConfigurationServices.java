@@ -17,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.virtualrepository.AssetType;
-import org.virtualrepository.service.model.ConfigurationData;
 
 import com.sun.jersey.spi.resource.Singleton;
 
@@ -37,23 +36,21 @@ import com.sun.jersey.spi.resource.Singleton;
 @Path("/configuration")
 @Singleton
 public class ConfigurationServices extends AbstractVirtualRepositoryServices {
-	private ConfigurationData _config;
+	private Properties _config;
 	
 	public ConfigurationServices() throws IOException {
 		super();
 		
-		Properties conf = new Properties();
+		this._config = new Properties();
 		
-		conf.load(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("configuration.properties"), Charset.forName("UTF-8")));
+		this._config.load(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("configuration.properties"), Charset.forName("UTF-8")));
 		
 		Collection<String> assetTypeNames = new HashSet<String>();
 		
 		for(AssetType type : availableTypes())
 			assetTypeNames.add(type.name());
 		
-		this._config = new ConfigurationData(conf.getProperty("vrs.local.name"),
-											 conf.getProperty("vrs.shared.vr.version"),
-											 assetTypeNames.toArray(new String[0]));
+		this._config.put("vrs.available.types", assetTypeNames.toArray(new String[0]));
 	}
 	
 	@GET

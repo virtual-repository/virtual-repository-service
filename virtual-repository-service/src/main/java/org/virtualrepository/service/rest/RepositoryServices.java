@@ -69,4 +69,20 @@ public class RepositoryServices extends AbstractVirtualRepositoryServices {
 			return this.handleError(t);
 		}
 	}
+	
+	@GET
+	@Path("/meta/{id}")
+	@Produces(RequestConstants.APPLICATION_VXML)
+	public Response getVXMLRepository(@PathParam("id") String id) {
+		try {
+			RepositoryService repo = this.doGetRepository(id);
+			
+			if(repo == null)
+				return this.notFound("Unknown repository '" + id + "'");
+			
+			return this.vxmlResponse(repo);
+		} catch(Throwable t) {
+			return this.handleError(t);
+		}
+	}
 }

@@ -21,7 +21,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.virtualrepository.Asset;
 import org.virtualrepository.AssetType;
-import org.virtualrepository.service.utils.TypeUtilities;
+import org.virtualrepository.service.utils.ManagementUtilities;
 
 import com.sun.jersey.spi.resource.Singleton;
 
@@ -86,7 +86,7 @@ public class AssetsServices extends AbstractVirtualRepositoryServices {
 		
 		if(requestedAssetTypesParameterValues != null)
 			for(String requestedAssetType : requestedAssetTypesParameterValues) {
-				requestedAssetTypes.add(TypeUtilities.forName(availableAssetTypes, requestedAssetType));
+				requestedAssetTypes.add(ManagementUtilities.assetTypeForName(availableAssetTypes, requestedAssetType));
 			}
 		
 		Collection<Asset> assets = new ArrayList<Asset>();
@@ -131,6 +131,17 @@ public class AssetsServices extends AbstractVirtualRepositoryServices {
 			return this.handleError(t);
 		}
 	}
+	
+	@GET
+	@Path("/meta")
+	@Produces(RequestConstants.APPLICATION_VXML)
+	public Response getVXMLAssets(@Context UriInfo info) {
+		try {
+			return this.vxmlResponse(this.doGetAssets(info));
+		} catch (Throwable t) {
+			return this.handleError(t);
+		}
+	}
 
 	@POST
 	@Path("/meta")
@@ -149,6 +160,17 @@ public class AssetsServices extends AbstractVirtualRepositoryServices {
 	public Response getXMLUpdatedAssets(@Context UriInfo info) {
 		try {
 			return this.xmlResponse(this.doGetUpdatedAssets(info));
+		} catch (Throwable t) {
+			return this.handleError(t);
+		}
+	}
+	
+	@POST
+	@Path("/meta")
+	@Produces(RequestConstants.APPLICATION_VXML)
+	public Response getVXMLUpdatedAssets(@Context UriInfo info) {
+		try {
+			return this.vxmlResponse(this.doGetUpdatedAssets(info));
 		} catch (Throwable t) {
 			return this.handleError(t);
 		}
