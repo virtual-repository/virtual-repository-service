@@ -1,66 +1,104 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>org.virtualrepository</groupId>
 	<artifactId>virtual-repository-service</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>virtual-repository-service Maven Webapp</name>
-	<url>http://maven.apache.org</url>
+
+	<name>Virtual Repository Service</name>
+
+	<properties>
+		<jersey.version>1.17.1</jersey.version>
+	</properties>
+
+	<repositories>
+		<repository>
+			<snapshots />
+			<id>fips-snapshots</id>
+			<name>fips-snapshot</name>
+			<url>http://artifactory.fao.org/artifactory/fips</url>
+		</repository>
+		<repository>
+			<id>sdmxsource</id>
+			<url>http://www.metadatatechnology.com/nexus/content/repositories/releases</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
 	<dependencies>
+
 		<dependency>
 			<groupId>org.virtualrepository</groupId>
 			<artifactId>virtual-repository</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>[1.0.0-SNAPSHOT,2.0.0-SNAPSHOT)</version>
 			<type>jar</type>
 		</dependency>
+
 		<dependency>
 			<groupId>org.virtualrepository</groupId>
 			<artifactId>virtual-semantic-repository</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>[1.0.0-SNAPSHOT,2.0.0-SNAPSHOT)</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.virtualrepository</groupId>
 			<artifactId>virtual-sdmx-registry</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>[1.0.0-SNAPSHOT,2.0.0-SNAPSHOT)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.virtualrepository</groupId>
 			<artifactId>virtual-rtms</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>[1.0.0-SNAPSHOT,2.0.0-SNAPSHOT)</version>
 			<type>jar</type>
 		</dependency>
+
+
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-servlet</artifactId>
-			<version>1.17.1</version>
+			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-server</artifactId>
-			<version>1.17.1</version>
+			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey.contribs</groupId>
 			<artifactId>jersey-multipart</artifactId>
-			<version>1.17.1</version>
+			<version>${jersey.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>net.sf.flexjson</groupId>
 			<artifactId>flexjson</artifactId>
 			<version>2.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>xstream</groupId>
 			<artifactId>xstream</artifactId>
 			<version>1.2</version>
 		</dependency>
+
+
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -74,4 +112,22 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>fao-ci</id>
+			<distributionManagement>
+				<repository>
+					<id>${dm.rel.id}</id>
+					<name>${dm.rel.id-name}</name>
+					<url>${dm.rel.id-url}</url>
+				</repository>
+				<snapshotRepository>
+					<id>${dm.snap.id}</id>
+					<name>${dm.snap.id-name}</name>
+					<url>${dm.snap.id-url}</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+	</profiles>
 </project>
