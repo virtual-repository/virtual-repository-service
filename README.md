@@ -1,4 +1,4 @@
 virtual-repository-service
 ==========================
 
-Basic REST service for virtual repository access
+REST API over the Virtual Repository.
