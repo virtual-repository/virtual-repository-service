@@ -16,8 +16,6 @@ import org.virtualrepository.service.rest.CdiService;
 import org.virtualrepository.service.utils.CdiProducers;
 import org.virtualrepository.spi.ServiceProxy;
 
-import com.sun.jersey.api.client.Client;
-
 /**
  * Tests the key elements of application infrastructure and testing are in place.
  * 
@@ -27,6 +25,7 @@ import com.sun.jersey.api.client.Client;
 @RunWith(Arquillian.class)
 public class InfrastructureTest {
 
+	public static final String testPath = "/test";
 	public static final String test_service="test-service";
 	
 	@Deployment(testable = false)
@@ -40,8 +39,10 @@ public class InfrastructureTest {
 		
 		CdiProducers.repository().services().add(mockRepository());
 
+		String path = testPath+CdiService.path;
+		
 		//assertion of injection is in test servlet
-		Client.create().resource(at(root,CdiService.path)).get(String.class);
+		call().resource(at(root,path)).get(String.class);
 		
 	}
 	

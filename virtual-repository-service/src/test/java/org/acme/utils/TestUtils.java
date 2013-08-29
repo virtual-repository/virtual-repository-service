@@ -21,14 +21,17 @@ import org.virtualrepository.impl.Type;
 import org.virtualrepository.spi.Importer;
 import org.virtualrepository.spi.Publisher;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.filter.LoggingFilter;
+
 @SuppressWarnings("all")
 public class TestUtils {
 
 	public static final String warName = "vrs.war";
-	public static final String testRoot = "rest/test";
+	public static final String restRoot = "rest";
 	
 	public static String at(URL base,String resource) {
-		return base+testRoot+resource;
+		return base+restRoot+resource;
 	}
 	public static WebArchive war() {
 
@@ -44,11 +47,14 @@ public class TestUtils {
 
 		System.out.println(war.toString(true));
 
-		// seems we cannot use @BeforeClass as it is invoked after container startup.
-		//beforeContainerStartsUp();
-
 		return war;
 
+	}
+	
+	public static Client call() {
+		Client client = Client.create();
+		client.addFilter(new LoggingFilter(System.err));
+		return client;
 	}
 	
 	private static WebArchive addWebInfResourcesTo(WebArchive war) {

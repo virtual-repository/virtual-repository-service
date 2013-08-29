@@ -6,8 +6,8 @@ package org.virtualrepository.service.rest;
 import static javax.ws.rs.core.Response.*;
 import static org.junit.Assert.*;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -20,7 +20,7 @@ import org.virtualrepository.VirtualRepository;
 
 
 @Path("/test")
-@ApplicationScoped
+@Singleton
 public class CdiService  {
 
 	private static final Logger log = LoggerFactory.getLogger(CdiService.class);
@@ -44,7 +44,6 @@ public class CdiService  {
 		//repository is staged for test
 		bean.services().contains(new QName(InfrastructureTest.test_service));
 		
-		
-		return status(Response.Status.OK).build();
+		return ok().build();
 	}
 }
