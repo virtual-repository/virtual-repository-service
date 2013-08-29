@@ -1,0 +1,1 @@
+we must declare this test servlet in the same package scanned in production.

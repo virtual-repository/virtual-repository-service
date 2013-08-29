@@ -11,6 +11,8 @@
 
 	<properties>
 		<jersey.version>1.17.1</jersey.version>
+		<weld.version>2.0.3.Final</weld.version>
+		<tomcat.version>7.0.42</tomcat.version>
 	</properties>
 
 	<repositories>
@@ -32,46 +34,72 @@
 		</repository>
 	</repositories>
 
+
+
+	<dependencyManagement>
+
+		<!-- regulates indirect dependencies forcing required versions -->
+
+		<dependencies>
+
+			<!-- overrides older version specified in arquillian-bom -->
+			<dependency>
+				<groupId>org.jboss.shrinkwrap.resolver</groupId>
+				<artifactId>shrinkwrap-resolver-depchain</artifactId>
+				<version>2.1.0-alpha-1</version>
+				<type>pom</type>
+				<scope>test</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.5</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.arquillian</groupId>
+				<artifactId>arquillian-bom</artifactId>
+				<version>1.1.1.Final</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+
+		</dependencies>
+
+	</dependencyManagement>
+
 	<dependencies>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.5</version>
-		</dependency>
-		
+		<!-- ############### infrastructure ################ -->
+
+		<!-- logging -->
+
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.0.13</version>
+			<scope>runtime</scope>
 		</dependency>
-		
+
+
+		<!-- dependency injection -->
+
+		<!-- note: we stay away from the single weld-servlet artefact, a shaded 
+			jar that bring along undesired stuff, such as sl4j-simple -->
 		<dependency>
-			<groupId>org.virtualrepository</groupId>
-			<artifactId>virtual-repository</artifactId>
-			<version>[1.0.0-SNAPSHOT,2.0.0-SNAPSHOT)</version>
-			<type>jar</type>
+			<groupId>org.jboss.weld.servlet</groupId>
+			<artifactId>weld-servlet-core</artifactId>
+			<version>${weld.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.virtualrepository</groupId>
-			<artifactId>virtual-semantic-repository</artifactId>
-			<version>[1.0.0-SNAPSHOT,2.0.0-SNAPSHOT)</version>
+			<groupId>org.jboss.weld</groupId>
+			<artifactId>weld-core</artifactId>
+			<version>${weld.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.virtualrepository</groupId>
-			<artifactId>virtual-sdmx-registry</artifactId>
-			<version>[1.0.0-SNAPSHOT,2.0.0-SNAPSHOT)</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.virtualrepository</groupId>
-			<artifactId>virtual-rtms</artifactId>
-			<version>[1.0.0-SNAPSHOT,2.0.0-SNAPSHOT)</version>
-			<type>jar</type>
-		</dependency>
-
+		<!-- rest runtime -->
 
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
@@ -80,6 +108,26 @@
 		</dependency>
 
 
+		<!-- ####################################################### -->
+
+
+
+
+
+		<!-- ############### app ################ -->
+
+		<dependency>
+			<groupId>org.virtualrepository</groupId>
+			<artifactId>virtual-repository</artifactId>
+			<version>[1.0.0-SNAPSHOT,2.0.0-SNAPSHOT)</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.virtualrepository</groupId>
+			<artifactId>sdmxsource-adapter</artifactId>
+			<version>[1.0.0-SNAPSHOT,2.0.0-SNAPSHOT)</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>net.sf.flexjson</groupId>
 			<artifactId>flexjson</artifactId>
@@ -90,10 +138,22 @@
 			<groupId>xstream</groupId>
 			<artifactId>xstream</artifactId>
 			<version>1.2</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>xpp3_min</artifactId>
+					<groupId>xpp3</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
+		<!-- ####################################################### -->
 
 
+
+
+		<!-- ############### test ################ -->
+
+		<!-- client calls -->
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-client</artifactId>
@@ -101,11 +161,61 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- in-container testing -->
+		<dependency>
+			<groupId>org.jboss.arquillian.junit</groupId>
+			<artifactId>arquillian-junit-container</artifactId>
+			<scope>test</scope>
+		</dependency>
 
+		<dependency>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-depchain</artifactId>
+			<type>pom</type>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-logging-log4j</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.arquillian.container</groupId>
+			<artifactId>arquillian-tomcat-embedded-7</artifactId>
+			<version>1.0.0.CR5</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<!-- test framework -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
 

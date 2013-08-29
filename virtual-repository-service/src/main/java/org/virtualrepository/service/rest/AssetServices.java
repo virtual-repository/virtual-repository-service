@@ -116,7 +116,7 @@ public class AssetServices extends AbstractVirtualRepositoryServices {
 				return this.xmlResponse(data);
 			else {
 				if(CodelistBean.class.isAssignableFrom(data.getClass())) {
-					CodelistBean asCodelistBean = (CodelistBean)data;
+					//CodelistBean asCodelistBean = (CodelistBean)data;
 					
 					throw new RuntimeException("Not yet supported... :(");
 				}

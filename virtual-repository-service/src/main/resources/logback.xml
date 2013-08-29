@@ -7,8 +7,6 @@
   </appender>
   
   
-  <logger name="org.virtualrepository" level="TRACE" />
- 
   <root level="INFO">
     <appender-ref ref="STDOUT" />
   </root>
