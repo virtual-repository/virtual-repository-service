@@ -10,6 +10,7 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -23,11 +24,13 @@ public class Configuration {
 
 	private final Properties properties;
 	private final VirtualRepository repository;
+	private Set<AssetType> types;
 	
 	@Inject
 	public Configuration(VirtualRepository repository) {
 		this.properties = new Properties();
 		this.repository=repository;
+		this.types = new HashSet<AssetType>();
 	}
 	
 	@PostConstruct
@@ -49,7 +52,10 @@ public class Configuration {
 		}
 		
 		
-		
+	}
+	
+	public Set<AssetType> assetTypes() {
+		return types;
 	}
 	
 	
@@ -82,13 +88,14 @@ public class Configuration {
 	
 	private void addDerivedProperties() {
 		
-		Collection<String> types = new HashSet<String>();
+		Collection<String> names = new HashSet<String>();
 		
 		for(RepositoryService service : repository.services())
-			for(AssetType type : service.returnedTypes())
-				types.add(type.name());
-		
-		this.properties.put(configTypesProperty,types);
+			for(AssetType type : service.returnedTypes()) {
+				types.add(type);
+				names.add(type.name());
+			}
+		this.properties.put(configTypesProperty,names);
 	}
 	
 }
