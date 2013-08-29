@@ -87,7 +87,7 @@ public class DiscoveryService extends AbstractVirtualRepositoryServices {
 		
 		log.info("returning metadata in Json about {} assets of types: {}", assets.size(),types);
 		
-		return ok(outcome).type(APPLICATION_JSON).build();
+		return ok(outcome).build();
 		
 	}
 	
