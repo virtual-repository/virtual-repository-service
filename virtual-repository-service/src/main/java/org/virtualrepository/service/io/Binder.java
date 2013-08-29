@@ -12,7 +12,10 @@ import javax.xml.bind.Marshaller;
 import org.dynamicvalues.Directives;
 import org.dynamicvalues.Dynamic;
 import org.dynamicvalues.DynamicIO;
+import org.virtualrepository.RepositoryService;
 import org.virtualrepository.spi.ServiceProxy;
+
+import com.thoughtworks.xstream.XStream;
 
 import flexjson.JSONSerializer;
 
@@ -26,11 +29,16 @@ public class Binder {
 	
 	private final JSONSerializer jsonOut;
 	private final JAXBContext xmlOut;
+	private final XStream vxmlOut;
 	
 	
 	public Binder() {
 		jsonOut = new JSONSerializer().exclude(JSON_DEFAULT_EXCLUSION_PATTERNS);
 		xmlOut = DynamicIO.newInstance();
+		
+		vxmlOut = new XStream();
+		vxmlOut.omitField(RepositoryService.class, "proxy");
+		vxmlOut.setMode(XStream.ID_REFERENCES);
 		
 	}
 	
@@ -58,6 +66,10 @@ public class Binder {
 			throw wrapped("cannot serialise "+object+" to XML (see cause)",e);
 		}
 		
+	}
+	
+	public String vxml(Object object) {
+		return vxmlOut.toXML(object);
 	}
 	
 	private Object valueOf(Object object) throws Exception {

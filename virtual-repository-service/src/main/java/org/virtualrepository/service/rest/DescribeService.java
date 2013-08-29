@@ -47,7 +47,7 @@ public class DescribeService {
 	@Produces(APPLICATION_JSON)
 	public Response describeInJson() {
 		
-		return ok(binder.jsonMoM(configuration.properties())).type(APPLICATION_JSON).build();
+		return ok(binder.jsonMoM(configuration.properties())).build();
 
 	}
 	
@@ -55,6 +55,6 @@ public class DescribeService {
 	@Produces(APPLICATION_XML)
 	public Response describeInXml() {
 		
-		return ok(binder.xmlMoM(configuration.properties())).type(APPLICATION_XML).build();
+		return ok(binder.xmlMoM(configuration.properties())).build();
 	}
 }

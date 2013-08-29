@@ -6,6 +6,7 @@ import static org.acme.utils.TestUtils.*;
 import static org.dynamicvalues.Dynamic.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.rest.DiscoveryService.*;
 
 import java.io.StringReader;
@@ -30,6 +31,9 @@ import org.virtualrepository.csv.CsvCodelist;
 import org.virtualrepository.sdmx.SdmxCodelist;
 import org.virtualrepository.service.utils.CdiProducers;
 import org.virtualrepository.spi.ServiceProxy;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 import flexjson.JSONDeserializer;
 
@@ -99,6 +103,23 @@ public class DiscoveryTest {
 		
 	}
 	
+	
+	@Test
+	public void selectingAllTypeIsSameAsNotSelectingThemAtAll_InJson(@ArquillianResource URL context) throws Exception {
+		
+		System.err.println(at(context,path));
+		String outcome = call().resource(at(context,path)).queryParam(typeParam,CsvCodelist.type.name())
+														  .queryParam(typeParam,SdmxCodelist.type.name())
+														  .accept(APPLICATION_JSON).get(String.class);
+		
+		JSONDeserializer<List<?>> deserializer = new JSONDeserializer<List<?>>();
+		
+		List<?> list = deserializer.deserialize(outcome);
+		
+		assertEquals(csvAssets.size()+sdmxAssets.size(),list.size());
+		
+	}
+	
 	@Test
 	public void inXml(@ArquillianResource URL context) throws Exception {
 		
@@ -112,5 +133,16 @@ public class DiscoveryTest {
 		assertEquals(csvAssets.size()+sdmxAssets.size(),list.size());
 	}
 	
+	@Test
+	public void inVXml(@ArquillianResource URL context) throws Exception {
+		
+		String outcome = call().resource(at(context,path)).accept(APPLICATION_VXML).get(String.class);
+		
+		List<?>  list = (List<?>) new XStream(new StaxDriver()).fromXML(outcome);
+		
+		assertEquals(csvAssets.size()+sdmxAssets.size(),list.size());
+		
+	}
+
 	
 }

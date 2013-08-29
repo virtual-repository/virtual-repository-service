@@ -14,8 +14,8 @@ import org.virtualrepository.impl.Repository;
  */
 public class CdiProducers {
 
-	//can get hold of this from tests
-	public static VirtualRepository repository = new Repository();
+	//use a real singletong can get hold of this from tests
+	private static VirtualRepository repository = new Repository();
 	
 	/**
 	 * Shared {@link VirtualRepository} instance.

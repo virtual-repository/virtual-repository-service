@@ -95,14 +95,14 @@ public class DiscoveryService extends AbstractVirtualRepositoryServices {
 	@Produces(APPLICATION_JSON)
 	public Response refreshAndGetInJson(@Context UriInfo info) {
 		
-		refresh(configuration.assetTypes());
+		refresh(typesFrom(info));
 		
 		return getInJson(info);
 	}
 	
 	@GET
 	@Produces(APPLICATION_XML)
-	public Response getXMLAssets(@Context UriInfo info) {
+	public Response getInXml(@Context UriInfo info) {
 		
 		Collection<AssetType> types = typesFrom(info);
 		
@@ -112,36 +112,41 @@ public class DiscoveryService extends AbstractVirtualRepositoryServices {
 		
 		log.info("returning metadata in XML about {} assets of types: {}", assets.size(),types);
 		
-		return ok(outcome).type(APPLICATION_XML).build();
+		return ok(outcome).build();
 	
 	}
 	
 	@POST
 	@Produces(APPLICATION_XML)
-	public Response getXMLUpdatedAssets(@Context UriInfo info) {
+	public Response refreshAndGetInXml(@Context UriInfo info) {
 		
-		refresh(configuration.assetTypes());
+		refresh(typesFrom(info));
 		
-		return getXMLAssets(info);
+		return getInXml(info);
 	}
 	
 	@GET
 	@Produces(APPLICATION_VXML)
-	public Response getVXMLAssets(@Context UriInfo info) {
-		try {
-			return this.vxmlResponse(this.assetsFor(typesFrom(info)));
-		} catch (Throwable t) {
-			return this.handleError(t);
-		}
+	public Response getinVXml(@Context UriInfo info) {
+		
+		Collection<AssetType> types = typesFrom(info);
+		
+		Collection<Asset> assets = assetsFor(types);
+		
+		String outcome = binder.vxml(assets);
+		
+		log.info("returning metadata in vXML about {} assets of types: {}", assets.size(),types);
+		
+		return ok(outcome).build();
 	}
 	
 	@POST
 	@Produces(APPLICATION_VXML)
-	public Response getVXMLUpdatedAssets(@Context UriInfo info) {
+	public Response refreshAndGetInVXml(@Context UriInfo info) {
 		
-		refresh(configuration.assetTypes());
+		refresh(typesFrom(info));
 		
-		return getVXMLAssets(info);
+		return getinVXml(info);
 	}
 	
 	
@@ -177,6 +182,10 @@ public class DiscoveryService extends AbstractVirtualRepositoryServices {
 	}
 	
 	
+	
+	private void refresh(Collection<AssetType> types) {
+		refresh(types.toArray(new AssetType[0]));
+	}
 	
 	private void refresh(AssetType ... types) {
 		
