@@ -12,7 +12,6 @@ import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.virtualrepository.service.configuration.Configuration;
@@ -45,7 +44,7 @@ public class DescribeService {
 	
 	
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(APPLICATION_JSON)
 	public Response describeInJson() {
 		
 		return ok(binder.jsonMoM(configuration.properties())).type(APPLICATION_JSON).build();
@@ -53,7 +52,7 @@ public class DescribeService {
 	}
 	
 	@GET
-	@Produces(MediaType.APPLICATION_XML)
+	@Produces(APPLICATION_XML)
 	public Response describeInXml() {
 		
 		return ok(binder.xmlMoM(configuration.properties())).type(APPLICATION_XML).build();

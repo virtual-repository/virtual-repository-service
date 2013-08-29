@@ -3,6 +3,8 @@
  */
 package org.virtualrepository.service.rest;
 
+import static org.virtualrepository.service.Constants.*;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -86,7 +88,7 @@ public class AssetServices extends AbstractVirtualRepositoryServices {
 	
 	@GET
 	@Path("/meta/{id}")
-	@Produces(RequestConstants.APPLICATION_VXML)
+	@Produces(APPLICATION_VXML)
 	public Response getVXMLAssetMetadata(@PathParam("id") String id) {
 		try {
 			return this.vxmlResponse(doLookupAsset(id));
@@ -108,7 +110,7 @@ public class AssetServices extends AbstractVirtualRepositoryServices {
 
 			String mediaType = ManagementUtilities.getProperMediaTypeFor(model, acceptHeader);
 
-			if(RequestConstants.APPLICATION_VXML.equals(mediaType))
+			if(APPLICATION_VXML.equals(mediaType))
 				return this.vxmlResponse(data);
 			else if(MediaType.APPLICATION_JSON.equals(mediaType))
 				return this.jsonResponse(data);

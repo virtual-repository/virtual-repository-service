@@ -19,7 +19,7 @@ import flexjson.JSONSerializer;
 @Singleton
 public class Binder {
 
-	static private String[] JSON_DEFAULT_EXCLUSION_PATTERNS = { "class", "*.class" };
+	static private String[] JSON_DEFAULT_EXCLUSION_PATTERNS = {"class", "*.class" };
 	
 	static private Directives defaultDynamicDirectives = by().excluding(type(ServiceProxy.class));
 	

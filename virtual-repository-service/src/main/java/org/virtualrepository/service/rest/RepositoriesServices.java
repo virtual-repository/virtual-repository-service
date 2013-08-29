@@ -3,6 +3,8 @@
  */
 package org.virtualrepository.service.rest;
 
+import static org.virtualrepository.service.Constants.*;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -57,7 +59,7 @@ public class RepositoriesServices extends AbstractVirtualRepositoryServices {
 	
 	@GET
 	@Path("/meta")
-	@Produces(RequestConstants.APPLICATION_VXML)
+	@Produces(APPLICATION_VXML)
 	public Response getVXMLRepositories() {
 		try {
 			return this.vxmlResponse(this.doGetServices());

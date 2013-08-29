@@ -14,6 +14,8 @@ import org.virtualrepository.impl.Repository;
  */
 public class CdiProducers {
 
+	//can get hold of this from tests
+	public static VirtualRepository repository = new Repository();
 	
 	/**
 	 * Shared {@link VirtualRepository} instance.
@@ -21,6 +23,6 @@ public class CdiProducers {
 	 */
 	@Produces @ApplicationScoped  
 	public static VirtualRepository repository() {
-		return new Repository();
+		return repository;
 	}
 }

@@ -3,13 +3,14 @@
  */
 package org.virtualrepository.service.utils;
 
+import static org.virtualrepository.service.Constants.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
 import org.sdmxsource.sdmx.api.model.beans.codelist.CodelistBean;
 import org.virtualrepository.AssetType;
 import org.virtualrepository.service.rest.ModelConstants;
-import org.virtualrepository.service.rest.RequestConstants;
 import org.virtualrepository.tabular.Table;
 
 /**
@@ -28,7 +29,8 @@ import org.virtualrepository.tabular.Table;
 final public class ManagementUtilities {
 	private ManagementUtilities() { }
 	
-	static public AssetType assetTypeForName(AssetType[] types, String name) throws RuntimeException {
+	static public AssetType typeWith(AssetType[] types, String name) {
+	
 		if(types == null || types.length == 0)
 			throw new RuntimeException("Please provide a non-NULL and non-empty list of available asset types");
 		
@@ -39,7 +41,7 @@ final public class ManagementUtilities {
 			if(type.name().equals(name))
 				return type;
 		
-		throw new RuntimeException("Unknown / unavailable asset type '" + name + "'");
+		throw new IllegalArgumentException("Unknown asset type '" + name + "'");
 	}
 	
 	static public Class<?> apiForName(String name) throws RuntimeException {
@@ -65,11 +67,11 @@ final public class ManagementUtilities {
 				acceptedMediaTypes.add(type);
 		}
 		
-		if(ModelConstants.SDMX_SS.equals(model) && acceptedMediaTypes.contains(RequestConstants.APPLICATION_SDMX_GENERIC_DATA)) {
-			return RequestConstants.APPLICATION_SDMX_GENERIC_DATA;
+		if(ModelConstants.SDMX_SS.equals(model) && acceptedMediaTypes.contains(APPLICATION_SDMX_GENERIC_DATA)) {
+			return APPLICATION_SDMX_GENERIC_DATA;
 		}
 		
-		for(String preferredMediaType : RequestConstants.PREFERRED_MEDIA_TYPES)
+		for(String preferredMediaType : PREFERRED_MEDIA_TYPES)
 			if(acceptedMediaTypes.contains(preferredMediaType))
 				return preferredMediaType;
 		

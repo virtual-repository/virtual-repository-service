@@ -1,5 +1,7 @@
 package org.virtualrepository.service;
 
+import static javax.ws.rs.core.MediaType.*;
+
 /**
  * Service-wide constants.
  * 
@@ -27,5 +29,29 @@ public class Constants {
 	 * The name of the org.virtualrepository.service.configuration property with the version of the virtual repository.
 	 */
 	public static final String config_virtual_repository = "virtual-repository";
+	
+	
+	/**
+	 * Custom XML serialisation media type.
+	 */
+	public static final String APPLICATION_VXML  = "application/vr-xml";
+	
+	
+	/**
+	 * Custom XML serialisation media type.
+	 */
+	public static final String APPLICATION_SDMX_GENERIC_DATA = "application/vnd.sdmx.genericdata+xml;version=2.1";
+	
+	/**
+	 * Custom XML serialisation media type.
+	 */
+	public static final String[] PREFERRED_MEDIA_TYPES = { 
+		APPLICATION_VXML,
+		APPLICATION_JSON,
+		APPLICATION_XML
+	};
+	
+	String ASSET_TYPE_QUERY_PARAMETER = "assetType";
+	String MODEL_QUERY_PARAMETER 	  = "model";
 	
 }

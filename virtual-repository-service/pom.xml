@@ -50,7 +50,7 @@
 				<type>pom</type>
 				<scope>test</scope>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
@@ -127,7 +127,7 @@
 			<artifactId>sdmxsource-adapter</artifactId>
 			<version>[1.0.0-SNAPSHOT,2.0.0-SNAPSHOT)</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>net.sf.flexjson</groupId>
 			<artifactId>flexjson</artifactId>
@@ -230,6 +230,14 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<forkMode>always</forkMode> <!-- integration tests require it -->
 				</configuration>
 			</plugin>
 		</plugins>

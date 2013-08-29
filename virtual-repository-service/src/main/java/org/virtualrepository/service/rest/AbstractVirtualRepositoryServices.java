@@ -3,10 +3,9 @@
  */
 package org.virtualrepository.service.rest;
 
-import static org.dynamicvalues.Directives.all;
-import static org.dynamicvalues.Directives.by;
-import static org.dynamicvalues.Directives.type;
-import static org.dynamicvalues.Dynamic.externalValueOf;
+import static org.dynamicvalues.Directives.*;
+import static org.dynamicvalues.Dynamic.*;
+import static org.virtualrepository.service.Constants.*;
 
 import java.io.StringWriter;
 import java.util.Collection;
@@ -119,7 +118,7 @@ abstract public class AbstractVirtualRepositoryServices {
 	}
 	
 	protected Response vxmlResponse(Object object) throws Exception {
-		return Response.ok(this.vxmlify(object), RequestConstants.APPLICATION_VXML).build();
+		return Response.ok(this.vxmlify(object), APPLICATION_VXML).build();
 	}
 	
 	protected Response handleError(Throwable t) {

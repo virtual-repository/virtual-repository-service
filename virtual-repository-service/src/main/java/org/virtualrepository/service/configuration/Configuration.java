@@ -9,12 +9,14 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.virtualrepository.AssetType;
 import org.virtualrepository.RepositoryService;
 import org.virtualrepository.VirtualRepository;
@@ -22,15 +24,15 @@ import org.virtualrepository.service.Constants;
 
 public class Configuration {
 
+	private static final Logger log = LoggerFactory.getLogger(Configuration.class);
+	
 	private final Properties properties;
 	private final VirtualRepository repository;
-	private Set<AssetType> types;
 	
 	@Inject
 	public Configuration(VirtualRepository repository) {
 		this.properties = new Properties();
 		this.repository=repository;
-		this.types = new HashSet<AssetType>();
 	}
 	
 	@PostConstruct
@@ -45,6 +47,8 @@ public class Configuration {
 			
 			addDerivedProperties();
 			
+			log.info("initialised configuration "+this);
+			
 			
 		}
 		catch(Exception e) {
@@ -54,8 +58,16 @@ public class Configuration {
 		
 	}
 	
-	public Set<AssetType> assetTypes() {
-		return types;
+	public AssetType[] assetTypes() {
+		
+		//this has to be dynamic to reflect dynamic service additions (including from tests)
+		Collection<AssetType> types = new HashSet<AssetType>();
+		
+		for(RepositoryService service : repository.services())
+			for(AssetType type : service.returnedTypes())
+				types.add(type);
+		
+		return types.toArray(new AssetType[0]);
 	}
 	
 	
@@ -63,9 +75,18 @@ public class Configuration {
 		return properties;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[");
+		for (Map.Entry<Object,Object> e : properties.entrySet())
+			builder.append(e.getKey()+"="+e.getValue()+" ");
+		builder.append("]");
+		return builder.toString();
+	}
+	
 	
 	//helpers
-	
 	
 	
 	private void loadProperties() throws Exception {
@@ -82,20 +103,17 @@ public class Configuration {
 	private boolean areValidProperties() {
 		
 		return 
-				this.properties.containsKey(config_endpoint_name) &&
-				this.properties.containsKey(config_virtual_repository) ;
+			this.properties.containsKey(config_endpoint_name) &&
+			this.properties.containsKey(config_virtual_repository) ;
 	}
 	
 	private void addDerivedProperties() {
 		
 		Collection<String> names = new HashSet<String>();
 		
-		for(RepositoryService service : repository.services())
-			for(AssetType type : service.returnedTypes()) {
-				types.add(type);
-				names.add(type.name());
-			}
+		for(AssetType type : assetTypes())
+			names.add(type.name());
+		
 		this.properties.put(configTypesProperty,names);
 	}
-	
 }

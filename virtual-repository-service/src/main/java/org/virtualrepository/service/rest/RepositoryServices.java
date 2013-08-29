@@ -3,6 +3,8 @@
  */
 package org.virtualrepository.service.rest;
 
+import static org.virtualrepository.service.Constants.*;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -72,7 +74,7 @@ public class RepositoryServices extends AbstractVirtualRepositoryServices {
 	
 	@GET
 	@Path("/meta/{id}")
-	@Produces(RequestConstants.APPLICATION_VXML)
+	@Produces(APPLICATION_VXML)
 	public Response getVXMLRepository(@PathParam("id") String id) {
 		try {
 			RepositoryService repo = this.doGetRepository(id);
