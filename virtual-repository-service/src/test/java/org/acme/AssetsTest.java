@@ -90,9 +90,8 @@ public class AssetsTest {
 	}
 	
 	@Test
-	public void selectiveInJson(@ArquillianResource URL context) throws Exception {
+	public void withSelectedTypesInJson(@ArquillianResource URL context) throws Exception {
 		
-		System.err.println(at(context,path));
 		String outcome = call().resource(at(context,path)).queryParam(typeParam,CsvCodelist.type.name()).accept(APPLICATION_JSON).get(String.class);
 		
 		JSONDeserializer<List<?>> deserializer = new JSONDeserializer<List<?>>();
@@ -103,11 +102,9 @@ public class AssetsTest {
 		
 	}
 	
-	
 	@Test
 	public void selectingAllTypeIsSameAsNotSelectingThemAtAll_InJson(@ArquillianResource URL context) throws Exception {
 		
-		System.err.println(at(context,path));
 		String outcome = call().resource(at(context,path)).queryParam(typeParam,CsvCodelist.type.name())
 														  .queryParam(typeParam,SdmxCodelist.type.name())
 														  .accept(APPLICATION_JSON).get(String.class);
@@ -117,6 +114,28 @@ public class AssetsTest {
 		List<?> list = deserializer.deserialize(outcome);
 		
 		assertEquals(csvAssets.size()+sdmxAssets.size(),list.size());
+		
+	}
+	
+	
+	@Test
+	public void withRefreshInJson(@ArquillianResource URL context) throws Exception {
+		
+		String outcome = call().resource(at(context,path)).accept(APPLICATION_JSON).get(String.class);
+		
+		JSONDeserializer<List<?>> deserializer = new JSONDeserializer<List<?>>();
+		
+		List<?> list = deserializer.deserialize(outcome);
+		
+		int current = list.size();
+		
+		csvAssets.add(new CsvCodelist("idnew","name",0));
+		
+		outcome = call().resource(at(context,path)).accept(APPLICATION_JSON).method("POST",String.class);
+		
+		list = deserializer.deserialize(outcome);
+		
+		assertEquals(current+1,list.size());
 		
 	}
 	

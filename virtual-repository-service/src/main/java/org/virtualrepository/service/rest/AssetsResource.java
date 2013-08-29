@@ -194,7 +194,7 @@ public class AssetsResource {
 		
 		try {
 			
-			log.info("refreshing asset metadata for types {},types");
+			log.info("refreshing asset metadata for types {}",Arrays.asList(types));
 			
 			repository.discover(types);
 			
