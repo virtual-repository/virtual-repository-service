@@ -7,7 +7,7 @@ import static org.dynamicvalues.Dynamic.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.virtualrepository.service.Constants.*;
-import static org.virtualrepository.service.rest.DiscoveryService.*;
+import static org.virtualrepository.service.rest.AssetsResource.*;
 
 import java.io.StringReader;
 import java.net.URL;
@@ -44,7 +44,7 @@ import flexjson.JSONDeserializer;
  *
  */
 @RunWith(Arquillian.class)
-public class DiscoveryTest {
+public class AssetsTest {
 
 	private static List<Asset> csvAssets = new ArrayList<Asset>();
 	private static List<Asset> sdmxAssets = new ArrayList<Asset>();

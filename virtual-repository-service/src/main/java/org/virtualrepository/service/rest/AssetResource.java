@@ -37,7 +37,7 @@ import com.sun.jersey.spi.resource.Singleton;
  */
 @Path("/asset")
 @Singleton
-public class AssetServices extends AbstractVirtualRepositoryServices {
+public class AssetResource extends AbstractResource {
 	private Asset doLookupAsset(String id) {
 		return repository().lookup(id);
 	}

@@ -30,7 +30,7 @@ import com.sun.jersey.spi.resource.Singleton;
  */
 @Path("/repositories")
 @Singleton
-public class RepositoriesServices extends AbstractVirtualRepositoryServices {
+public class RepositoriesResource extends AbstractResource {
 	private Services doGetServices() {
 		return repository().services();
 	}

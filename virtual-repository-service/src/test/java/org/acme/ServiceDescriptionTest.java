@@ -3,7 +3,7 @@ package org.acme;
 import static javax.ws.rs.core.MediaType.*;
 import static org.acme.utils.TestUtils.*;
 import static org.dynamicvalues.Dynamic.*;
-import static org.virtualrepository.service.rest.DescribeService.*;
+import static org.virtualrepository.service.rest.ServiceDescriptionResource.*;
 
 import java.io.StringReader;
 import java.net.URL;
@@ -29,7 +29,7 @@ import flexjson.JSONDeserializer;
  *
  */
 @RunWith(Arquillian.class)
-public class DescribeTest {
+public class ServiceDescriptionTest {
 
 	@Deployment(testable = false)
 	public static WebArchive deploy() {

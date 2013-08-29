@@ -44,7 +44,7 @@ import flexjson.JSONSerializer;
  * @version 1.0
  * @since 27 Aug 2013
  */
-abstract public class AbstractVirtualRepositoryServices {
+abstract public class AbstractResource {
 	static private VirtualRepository REPO;
 	
 	static private String[] JSON_DEFAULT_EXCLUSION_PATTERNS = { "class", "*.class" };

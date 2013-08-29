@@ -31,7 +31,7 @@ import com.sun.jersey.spi.resource.Singleton;
  */
 @Path("/repository")
 @Singleton
-public class RepositoryServices extends AbstractVirtualRepositoryServices {
+public class RepositoryResource extends AbstractResource {
 	private RepositoryService doGetRepository(String id) {
 		for(RepositoryService service : repository().services())
 			if(service.name().getLocalPart().equals(id))

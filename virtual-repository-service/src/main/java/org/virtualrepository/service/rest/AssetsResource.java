@@ -6,7 +6,7 @@ package org.virtualrepository.service.rest;
 import static javax.ws.rs.core.MediaType.*;
 import static javax.ws.rs.core.Response.*;
 import static org.virtualrepository.service.Constants.*;
-import static org.virtualrepository.service.rest.DiscoveryService.*;
+import static org.virtualrepository.service.rest.AssetsResource.*;
 import static org.virtualrepository.service.utils.ManagementUtilities.*;
 
 import java.util.ArrayList;
@@ -45,9 +45,9 @@ import org.virtualrepository.service.utils.Utils;
  */
 @Path(path)
 @Singleton
-public class DiscoveryService extends AbstractVirtualRepositoryServices {
+public class AssetsResource {
 	
-	private static Logger log = LoggerFactory.getLogger(DiscoveryService.class);
+	private static Logger log = LoggerFactory.getLogger(AssetsResource.class);
 	
 	public static final String path = "/assets";
 	public static final String typeParam = "type";
@@ -59,7 +59,7 @@ public class DiscoveryService extends AbstractVirtualRepositoryServices {
 	private Map<AssetType, Collection<Asset>> index;
 
 	@Inject
-	public DiscoveryService(VirtualRepository repository, Configuration configuration, Binder binder) {
+	public AssetsResource(VirtualRepository repository, Configuration configuration, Binder binder) {
 		
 		this.repository=repository;
 		this.configuration=configuration;
