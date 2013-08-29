@@ -12,9 +12,7 @@ import static org.virtualrepository.service.utils.Utils.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -55,8 +53,6 @@ public class AssetsResource {
 	private final VirtualRepository repository;
 	private final Configuration configuration;
 	private final Binder binder;
-	
-	private Map<AssetType, Collection<Asset>> index;
 
 	@Inject
 	public AssetsResource(VirtualRepository repository, Configuration configuration, Binder binder) {
@@ -64,7 +60,6 @@ public class AssetsResource {
 		this.repository=repository;
 		this.configuration=configuration;
 		this.binder=binder;
-		this.index = new HashMap<AssetType, Collection<Asset>>();
 		
 		
 	}
@@ -171,13 +166,11 @@ public class AssetsResource {
 	private Collection<Asset> assetsFor(Collection<AssetType> types) {
 		
 		Collection<Asset> assets = new ArrayList<Asset>();
-
-		for(AssetType type : types) {
-			Collection<Asset> requestedAssets = index.get(type);
-			if(requestedAssets != null)
-				assets.addAll(requestedAssets);
-		}
-
+		Collection<List<Asset>> assetsByType = repository.lookup(types.toArray(new AssetType[0])).values();
+		
+		for(List<Asset> assetsForThisType : assetsByType)
+			assets.addAll(assetsForThisType);
+		
 		return assets;
 	}
 	
@@ -198,36 +191,11 @@ public class AssetsResource {
 			
 			repository.discover(types);
 			
-			buildIndex(types);
+			//buildIndex(types);
 			
 		}
 		catch(Exception e) {
 			Utils.rethrow("could not refresh assets (see cause)", e);
-		}
-	}
-
-	private void clearIndex(AssetType ... types) {
-		
-		for(AssetType type : types)
-			this.index.remove(type);
-	}
-	
-	private void buildIndex(AssetType ... types) {
-		
-		clearIndex(types);
-		
-		Collection<Asset> assetsByType;
-		
-		for(Asset asset : repository) {
-			
-			assetsByType = this.index.get(asset.type());
-			
-			if(assetsByType == null) {
-				assetsByType = new ArrayList<Asset>();
-				this.index.put(asset.type(), assetsByType);
-			}
-			
-			assetsByType.add(asset);
 		}
 	}
 	
