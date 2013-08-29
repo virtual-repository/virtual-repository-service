@@ -7,7 +7,7 @@ import static javax.ws.rs.core.MediaType.*;
 import static javax.ws.rs.core.Response.*;
 import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.rest.AssetsResource.*;
-import static org.virtualrepository.service.utils.ManagementUtilities.*;
+import static org.virtualrepository.service.utils.Utils.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

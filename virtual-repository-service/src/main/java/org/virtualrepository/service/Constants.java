@@ -51,7 +51,11 @@ public class Constants {
 		APPLICATION_XML
 	};
 	
-	String ASSET_TYPE_QUERY_PARAMETER = "assetType";
-	String MODEL_QUERY_PARAMETER 	  = "model";
+	public static String ASSET_TYPE_QUERY_PARAMETER = "assetType";
+	public static String MODEL_QUERY_PARAMETER 	  = "model";
+	
+	
+	public static String TABLE   = "table";
+	public static String SDMX_SS = "sdmx-ss";
 	
 }

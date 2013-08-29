@@ -4,6 +4,7 @@
 package org.virtualrepository.service.rest;
 
 import static org.virtualrepository.service.Constants.*;
+import static org.virtualrepository.service.utils.Utils.*;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -17,7 +18,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.sdmxsource.sdmx.api.model.beans.codelist.CodelistBean;
 import org.virtualrepository.Asset;
-import org.virtualrepository.service.utils.ManagementUtilities;
+import org.virtualrepository.service.Constants;
 import org.virtualrepository.tabular.Table;
 
 import com.sun.jersey.spi.resource.Singleton;
@@ -43,7 +44,7 @@ public class AssetResource extends AbstractResource {
 	}
 	
 	private Object doRetrieveAsset(String id, String model) {
-		Object data = repository().retrieve(repository().lookup(id), ManagementUtilities.apiForName(model == null ? ModelConstants.TABLE : model));
+		Object data = repository().retrieve(repository().lookup(id), apiForName(model == null ? Constants.TABLE : model));
 				
 		if(data == null)
 			return null;
@@ -108,7 +109,7 @@ public class AssetResource extends AbstractResource {
 			if(data == null)
 				return this.status(Status.NO_CONTENT);
 
-			String mediaType = ManagementUtilities.getProperMediaTypeFor(model, acceptHeader);
+			String mediaType = getProperMediaTypeFor(model, acceptHeader);
 
 			if(APPLICATION_VXML.equals(mediaType))
 				return this.vxmlResponse(data);
