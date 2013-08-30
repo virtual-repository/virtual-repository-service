@@ -56,20 +56,19 @@ public class Utils {
 	}
 	
 	
-	
+	/**
+	 * Returns the asset type among many which has a given name.
+	 * @param types the types
+	 * @param name the name
+	 * @return the asset type with the given name
+	 */
 	static public AssetType typeWith(AssetType[] types, String name) {
-		
-		if(types == null || types.length == 0)
-			throw new RuntimeException("Please provide a non-NULL and non-empty list of available asset types");
-		
-		if(name == null)
-			throw new RuntimeException("Please provide a non-NULL asset type name");
 		
 		for(AssetType type : types)
 			if(type.name().equals(name))
 				return type;
 		
-		throw new IllegalArgumentException("Unknown asset type '" + name + "'");
+		throw new IllegalArgumentException("unknown asset type '" + name + "'");
 	}
 	
 	static public Class<?> apiForName(String name) throws RuntimeException {
