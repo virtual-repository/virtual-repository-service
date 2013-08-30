@@ -38,6 +38,12 @@ public class Constants {
 	
 	
 	/**
+	 * Suffix for secondary media types.
+	 */
+	public static final String SECONDARY  = ";q=0.9";
+	
+	
+	/**
 	 * Custom XML serialisation media type.
 	 */
 	public static final String APPLICATION_SDMX_GENERIC_DATA = "application/vnd.sdmx.genericdata+xml;version=2.1";

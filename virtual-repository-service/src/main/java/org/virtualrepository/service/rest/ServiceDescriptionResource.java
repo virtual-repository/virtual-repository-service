@@ -5,6 +5,7 @@ package org.virtualrepository.service.rest;
 
 import static javax.ws.rs.core.MediaType.*;
 import static javax.ws.rs.core.Response.*;
+import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.rest.ServiceDescriptionResource.*;
 
 import javax.inject.Inject;
@@ -52,7 +53,7 @@ public class ServiceDescriptionResource {
 	}
 	
 	@GET
-	@Produces(APPLICATION_XML)
+	@Produces(APPLICATION_XML+SECONDARY)
 	public Response describeInXml() {
 		
 		return ok(binder.xmlMoM(configuration.properties())).build();

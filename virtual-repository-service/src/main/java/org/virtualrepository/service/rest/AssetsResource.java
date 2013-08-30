@@ -96,7 +96,7 @@ public class AssetsResource {
 	}
 	
 	@GET
-	@Produces(APPLICATION_XML)
+	@Produces(APPLICATION_XML+SECONDARY)
 	public Response getInXml(@Context UriInfo info) {
 		
 		Collection<AssetType> types = typesFrom(info);
@@ -112,7 +112,7 @@ public class AssetsResource {
 	}
 	
 	@POST
-	@Produces(APPLICATION_XML)
+	@Produces(APPLICATION_XML+SECONDARY)
 	public Response refreshAndGetInXml(@Context UriInfo info) {
 		
 		refresh(typesFrom(info));
@@ -121,7 +121,7 @@ public class AssetsResource {
 	}
 	
 	@GET
-	@Produces(APPLICATION_VXML)
+	@Produces(APPLICATION_VXML+SECONDARY)
 	public Response getinVXml(@Context UriInfo info) {
 		
 		Collection<AssetType> types = typesFrom(info);
@@ -136,7 +136,7 @@ public class AssetsResource {
 	}
 	
 	@POST
-	@Produces(APPLICATION_VXML)
+	@Produces(APPLICATION_VXML+SECONDARY)
 	public Response refreshAndGetInVXml(@Context UriInfo info) {
 		
 		refresh(typesFrom(info));
