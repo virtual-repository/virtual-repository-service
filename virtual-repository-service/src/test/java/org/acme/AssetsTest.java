@@ -2,6 +2,7 @@ package org.acme;
 
 import static com.sun.jersey.api.client.ClientResponse.Status.*;
 import static java.util.Arrays.*;
+import static javax.ws.rs.core.HttpHeaders.*;
 import static javax.ws.rs.core.MediaType.*;
 import static org.acme.utils.TestUtils.*;
 import static org.dynamicvalues.Dynamic.*;
@@ -13,8 +14,10 @@ import static org.virtualrepository.service.rest.AssetsResource.*;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import javax.ws.rs.core.EntityTag;
 import javax.xml.bind.Unmarshaller;
 
 import org.acme.utils.TestUtils;
@@ -34,6 +37,7 @@ import org.virtualrepository.service.utils.CdiProducers;
 import org.virtualrepository.spi.ServiceProxy;
 
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
@@ -89,6 +93,7 @@ public class AssetsTest {
 		assertEquals(csvAssets.size() + sdmxAssets.size(), list.size());
 
 	}
+
 
 	@Test
 	public void withSelectedTypesInJson(@ArquillianResource URL context) throws Exception {
@@ -149,6 +154,39 @@ public class AssetsTest {
 		assertEquals(current + 1, list.size());
 
 	}
+	
+	
+	@Test
+	public void canBeCachedWithLastModified(@ArquillianResource URL context) throws Exception {
+
+		WebResource resource = call().resource(at(context, path));
+
+		ClientResponse response = resource.get(ClientResponse.class);
+
+		Date lm = response.getLastModified();
+		
+		response = resource.header(IF_MODIFIED_SINCE,lm).get(ClientResponse.class);
+
+		assertEquals(NOT_MODIFIED,response.getClientResponseStatus());
+		
+	}
+	
+	@Test
+	public void canBeCachedWithETag(@ArquillianResource URL context) throws Exception {
+
+		WebResource resource = call().resource(at(context, path));
+
+		ClientResponse response = resource.get(ClientResponse.class);
+
+		EntityTag tag = response.getEntityTag();
+		
+		response = resource.header(IF_NONE_MATCH,tag).get(ClientResponse.class);
+
+		assertEquals(NOT_MODIFIED,response.getClientResponseStatus());
+		
+	}
+	
+	
 
 	@Test
 	public void inXml(@ArquillianResource URL context) throws Exception {
