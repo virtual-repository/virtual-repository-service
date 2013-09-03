@@ -64,9 +64,9 @@ public class AssetsTest {
 	@SuppressWarnings("all")
 	public static void setup() throws Exception {
 
-		csvAssets.add(new CsvCodelist("id1", "name", 0));
-		csvAssets.add(new CsvCodelist("id2", "name", 0));
-		sdmxAssets.add(new SdmxCodelist("urn://acme.org", "id2", "1.0", "name"));
+		csvAssets.add(new CsvCodelist("id1", "standardName", 0));
+		csvAssets.add(new CsvCodelist("id2", "standardName", 0));
+		sdmxAssets.add(new SdmxCodelist("urn://acme.org", "id2", "1.0", "standardName"));
 
 		ServiceProxy proxy1 = aProxy().with(anImporterFor(CsvCodelist.type)).get();
 		ServiceProxy proxy2 = aProxy().with(anImporterFor(SdmxCodelist.type)).get();
@@ -85,6 +85,20 @@ public class AssetsTest {
 	public void inJson(@ArquillianResource URL context) throws Exception {
 
 		String outcome = call().resource(at(context, path)).accept(APPLICATION_JSON).get(String.class);
+
+		JSONDeserializer<List<?>> deserializer = new JSONDeserializer<List<?>>();
+
+		List<?> list = deserializer.deserialize(outcome);
+
+		assertEquals(csvAssets.size() + sdmxAssets.size(), list.size());
+
+	}
+	
+	
+	@Test
+	public void usingTheDefaultType(@ArquillianResource URL context) throws Exception {
+
+		String outcome = call().resource(at(context, path)).get(String.class);
 
 		JSONDeserializer<List<?>> deserializer = new JSONDeserializer<List<?>>();
 
@@ -145,7 +159,7 @@ public class AssetsTest {
 
 		int current = list.size();
 
-		csvAssets.add(new CsvCodelist("idnew", "name", 0));
+		csvAssets.add(new CsvCodelist("idnew", "standardName", 0));
 
 		outcome = call().resource(at(context, path)).accept(APPLICATION_JSON).method("POST", String.class);
 
@@ -157,11 +171,11 @@ public class AssetsTest {
 	
 	
 	@Test
-	public void canBeCachedWithLastModified(@ArquillianResource URL context) throws Exception {
+	public void conditionallyWithLastModified(@ArquillianResource URL context) throws Exception {
 
 		WebResource resource = call().resource(at(context, path));
 
-		ClientResponse response = resource.get(ClientResponse.class);
+		ClientResponse response = resource.accept(APPLICATION_VXML).get(ClientResponse.class);
 
 		Date lm = response.getLastModified();
 		
@@ -172,11 +186,11 @@ public class AssetsTest {
 	}
 	
 	@Test
-	public void canBeCachedWithETag(@ArquillianResource URL context) throws Exception {
+	public void conditionallyWithEtag(@ArquillianResource URL context) throws Exception {
 
 		WebResource resource = call().resource(at(context, path));
 
-		ClientResponse response = resource.get(ClientResponse.class);
+		ClientResponse response = resource.accept(APPLICATION_JSON).get(ClientResponse.class);
 
 		EntityTag tag = response.getEntityTag();
 		

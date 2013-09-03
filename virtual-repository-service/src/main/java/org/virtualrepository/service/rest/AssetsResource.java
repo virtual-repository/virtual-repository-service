@@ -3,8 +3,7 @@
  */
 package org.virtualrepository.service.rest;
 
-import static javax.ws.rs.core.MediaType.*;
-import static org.virtualrepository.service.Constants.*;
+import static javax.ws.rs.core.Response.*;
 import static org.virtualrepository.service.rest.AssetsResource.*;
 import static org.virtualrepository.service.utils.Utils.*;
 
@@ -20,13 +19,13 @@ import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Variant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +48,7 @@ import org.virtualrepository.service.utils.Utils;
 public class AssetsResource {
 
 	private static Logger log = LoggerFactory.getLogger(AssetsResource.class);
-
+	
 	public static final String path = "/assets";
 	public static final String typeParam = "type";
 
@@ -74,92 +73,48 @@ public class AssetsResource {
 	}
 
 	@GET
-	@Produces(APPLICATION_JSON)
-	public Response getInJson(@Context UriInfo info, @Context Request request) {
+	public Response get(@Context UriInfo info, @Context Request request) {
 
+		List<Variant> supportedTypes = VrsMediaType.supported();
+		
+		//media type selection
+		Variant preferred = request.selectVariant(supportedTypes);
+		
+		if (preferred==null)
+			return notAcceptable(supportedTypes).build();
+
+		
+		//conditional get
 		Response unchanged = evaluateChange(request);
 
 		if (unchanged != null)
 			return unchanged;
 
+		
+		
 		Collection<AssetType> types = typesFrom(info);
 
 		Collection<Asset> assets = assetsFor(types);
+			
+		VrsMediaType type = VrsMediaType.fromString(preferred.getMediaType().toString());
+			
+		String outcome = type.bind(assets).with(binder);
 
-		String outcome = binder.jsonMoM(assets);
-
-		log.info("returning metadata in Json about {} assets of types: {}", assets.size(), types);
+		log.info("returning metadata in {} about {} assets of types: {}", type, assets.size(), types);
 
 		return ok(outcome);
 
 	}
+	
+	
+
 
 	@POST
-	@Produces(APPLICATION_JSON)
-	public Response refreshAndGetInJson(@Context UriInfo info, @Context Request request) {
+	public Response refreshAndGet(@Context UriInfo info, @Context Request request) {
 
 		refresh(typesFrom(info));
 
-		return getInJson(info, request);
-	}
-
-	@GET
-	@Produces(APPLICATION_XML + SECONDARY)
-	public Response getInXml(@Context UriInfo info,@Context Request request) {
-
-		Response unchanged = evaluateChange(request);
-
-		if (unchanged != null)
-			return unchanged;
-
-		Collection<AssetType> types = typesFrom(info);
-
-		Collection<Asset> assets = assetsFor(types);
-
-		String outcome = binder.xmlMoM(assets);
-
-		log.info("returning metadata in XML about {} assets of types: {}", assets.size(), types);
-
-		return ok(outcome);
-
-	}
-
-	@POST
-	@Produces(APPLICATION_XML + SECONDARY)
-	public Response refreshAndGetInXml(@Context UriInfo info,@Context Request request) {
-
-		refresh(typesFrom(info));
-
-		return getInXml(info,request);
-	}
-
-	@GET
-	@Produces(APPLICATION_VXML + SECONDARY)
-	public Response getinVXml(@Context UriInfo info, @Context Request request) {
-
-		Response unchanged = evaluateChange(request);
-
-		if (unchanged != null)
-			return unchanged;
-
-		Collection<AssetType> types = typesFrom(info);
-
-		Collection<Asset> assets = assetsFor(types);
-
-		String outcome = binder.vxml(assets);
-
-		log.info("returning metadata in vXML about {} assets of types: {}", assets.size(), types);
-
-		return ok(outcome);
-	}
-
-	@POST
-	@Produces(APPLICATION_VXML + SECONDARY)
-	public Response refreshAndGetInVXml(@Context UriInfo info,@Context Request request) {
-
-		refresh(typesFrom(info));
-
-		return getinVXml(info,request);
+		return get(info, request);
 	}
 
 	// helpers
@@ -234,5 +189,4 @@ public class AssetsResource {
 		
 		return builder == null ? null : builder.build();
 	}
-
 }

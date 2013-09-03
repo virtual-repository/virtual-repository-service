@@ -25,7 +25,7 @@ public class BinderTest {
 	@Test
 	public void assetsCanBeBoundToJson() throws Exception {
 		
-		Asset a = 	new CsvCodelist("id1","name",0);
+		Asset a = 	new CsvCodelist("id1","standardName",0);
 		
 		Binder binder = new Binder();
 		

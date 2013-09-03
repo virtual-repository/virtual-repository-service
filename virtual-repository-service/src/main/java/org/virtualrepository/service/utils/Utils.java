@@ -57,10 +57,10 @@ public class Utils {
 	
 	
 	/**
-	 * Returns the asset type among many which has a given name.
+	 * Returns the asset type among many which has a given standardName.
 	 * @param types the types
-	 * @param name the name
-	 * @return the asset type with the given name
+	 * @param standardName the standardName
+	 * @return the asset type with the given standardName
 	 */
 	static public AssetType typeWith(AssetType[] types, String name) {
 		

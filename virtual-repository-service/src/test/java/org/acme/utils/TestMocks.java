@@ -37,8 +37,8 @@ public abstract class TestMocks  {
 		ServiceProxy proxy = aProxy().get();
 		
 		/**
-		 * Set a name for the service
-		 * @param name the identifier
+		 * Set a standardName for the service
+		 * @param standardName the identifier
 		 * @return this builder
 		 */
 		public ServiceBuilder name(String name) {
@@ -49,7 +49,7 @@ public abstract class TestMocks  {
 		
 		/**
 		 * Sets a proxy for the service
-		 * @param name the identifier
+		 * @param standardName the identifier
 		 * @return this builder
 		 */
 		public ServiceBuilder with(ServiceProxy proxy) {
@@ -89,7 +89,7 @@ public abstract class TestMocks  {
 		}
 		
 		/**
-		 * Returns the mock service with a random name
+		 * Returns the mock service with a random standardName
 		 * @return the mock service
 		 */
 		public ServiceProxy get() {
@@ -117,7 +117,7 @@ public abstract class TestMocks  {
 		
 		/**
 		 * Set an identifier for the mock asset
-		 * @param name the identifier
+		 * @param standardName the identifier
 		 * @return this builder
 		 */
 		public AssetBuilder id(String id) {

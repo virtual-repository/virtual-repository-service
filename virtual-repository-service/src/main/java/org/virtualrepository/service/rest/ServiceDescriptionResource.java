@@ -7,6 +7,7 @@ import static javax.ws.rs.core.MediaType.*;
 import static javax.ws.rs.core.Response.*;
 import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.rest.ServiceDescriptionResource.*;
+import static org.virtualrepository.service.rest.VrsMediaType.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -48,7 +49,7 @@ public class ServiceDescriptionResource {
 	@Produces(APPLICATION_JSON)
 	public Response describeInJson() {
 		
-		return ok(binder.jsonMoM(configuration.properties())).build();
+		return ok(JSON.bind(configuration.properties()).with(binder)).build();
 
 	}
 	
@@ -56,6 +57,6 @@ public class ServiceDescriptionResource {
 	@Produces(APPLICATION_XML+SECONDARY)
 	public Response describeInXml() {
 		
-		return ok(binder.xmlMoM(configuration.properties())).build();
+		return ok(XML.bind(configuration.properties()).with(binder)).build();
 	}
 }
