@@ -5,6 +5,7 @@ package org.virtualrepository.service.rest;
 
 import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.rest.AssetsResource.*;
+import static org.virtualrepository.service.rest.errors.Error.*;
 import static org.virtualrepository.service.utils.Utils.*;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -70,6 +72,25 @@ public class AssetsResource {
 		refresh();
 	}
 
+	@GET
+	@Path("{id}")
+	public Response getOne(@PathParam("id") String id, @Context Request request) {
+
+		Response unchanged = evaluateChange(request);
+
+		if (unchanged != null)
+			return unchanged;
+
+		try {
+			Asset asset = repository.lookup(id);
+			return ok(asset);
+		}
+		catch(IllegalStateException e) {
+			throw no_such_asset.toException("unknown asset "+id);
+		}
+		
+	}
+	
 	@GET
 	public Response get(@QueryParam(typeParam) List<String> typeNames, @Context Request request) {
 

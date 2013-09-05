@@ -50,6 +50,10 @@ public class AssetsTest {
 
 	private static List<Asset> csvAssets = new ArrayList<Asset>();
 	private static List<Asset> sdmxAssets = new ArrayList<Asset>();
+	
+	static String csv_id1 = "id1";
+	static String csv_id2 = "id2";
+	static String sdmx_id1 = "urn://acme.org";
 
 	@Deployment(testable = false)
 	public static WebArchive deploy() {
@@ -60,9 +64,9 @@ public class AssetsTest {
 	@SuppressWarnings("all")
 	public static void setup() throws Exception {
 
-		csvAssets.add(new CsvCodelist("id1", "standardName", 0));
-		csvAssets.add(new CsvCodelist("id2", "standardName", 0));
-		sdmxAssets.add(new SdmxCodelist("urn://acme.org", "id2", "1.0", "standardName"));
+		csvAssets.add(new CsvCodelist(csv_id1, "standardName", 0));
+		csvAssets.add(new CsvCodelist(csv_id2, "standardName", 0));
+		sdmxAssets.add(new SdmxCodelist(sdmx_id1, "id", "1.0", "standardName"));
 
 		ServiceProxy proxy1 = aProxy().with(anImporterFor(CsvCodelist.type)).get();
 		ServiceProxy proxy2 = aProxy().with(anImporterFor(SdmxCodelist.type)).get();
@@ -89,7 +93,6 @@ public class AssetsTest {
 		assertEquals(csvAssets.size() + sdmxAssets.size(), list.size());
 
 	}
-	
 	
 	@Test
 	public void usingTheDefaultType(@ArquillianResource URL context) throws Exception {
@@ -211,7 +214,6 @@ public class AssetsTest {
 	}
 	
 	
-
 	@Test
 	public void inXml(@ArquillianResource URL context) throws Exception {
 
@@ -234,6 +236,36 @@ public class AssetsTest {
 
 		assertEquals(csvAssets.size() + sdmxAssets.size(), list.size());
 
+	}
+	
+	
+	@Test
+	public void oneInJson(@ArquillianResource URL context) throws Exception {
+
+		call().resource(at(context, path+"/"+csv_id1)).accept(JMOM.type()).get(String.class);
+		
+	}
+	
+	
+	@Test
+	public void oneInXml(@ArquillianResource URL context) throws Exception {
+
+		call().resource(at(context, path+"/"+csv_id1)).accept(XMOM.type()).get(String.class);
+
+	}
+	
+	@Test
+	public void badoneInJson(@ArquillianResource URL context) throws Exception {
+
+		try {
+			call().resource(at(context, path+"/bad")).accept(JMOM.type()).get(String.class);
+			fail();
+		}
+		catch(UniformInterfaceException e) {
+			assertEquals(NOT_FOUND,e.getResponse().getClientResponseStatus());
+		}
+
+		
 	}
 
 }
