@@ -1,6 +1,6 @@
 package org.virtualrepository.service;
 
-import static javax.ws.rs.core.MediaType.*;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Service-wide constants.
@@ -31,9 +31,19 @@ public class Constants {
 	public static final String config_virtual_repository = "virtual-repository";
 
 	/**
-	 * Custom XML serialisation media type.
+	 * XML-based serialisation media type.
 	 */
-	public static final String APPLICATION_VXML = "application/vr-xml";
+	public static final String xobject = "application/vr.v1+xml";
+	
+	/**
+	 * JSon-based exchange media type.
+	 */
+	public static final String jmom = MediaType.APPLICATION_JSON;
+	
+	/**
+	 * XML-based exchange media type.
+	 */
+	public static final String xmom = MediaType.APPLICATION_XML;
 
 	/**
 	 * Suffix for secondary media types.
@@ -48,7 +58,7 @@ public class Constants {
 	/**
 	 * Custom XML serialisation media type.
 	 */
-	public static final String[] PREFERRED_MEDIA_TYPES = { APPLICATION_VXML, APPLICATION_JSON, APPLICATION_XML };
+	public static final String[] ALL_MEDIA_TYPES = {jmom,xmom,xobject};
 
 	
 	public static String ASSET_TYPE_QUERY_PARAMETER = "assetType";

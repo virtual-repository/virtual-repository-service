@@ -14,12 +14,6 @@ import org.virtualrepository.service.io.Binder;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
-/**
- * Tests the key elements of application infrastructure and testing are in place.
- * 
- * @author Fabio Simeoni
- *
- */
 public class BinderTest {
 
 	@Test

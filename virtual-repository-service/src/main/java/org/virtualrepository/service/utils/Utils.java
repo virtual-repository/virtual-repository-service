@@ -98,7 +98,7 @@ public class Utils {
 			return APPLICATION_SDMX_GENERIC_DATA;
 		}
 		
-		for(String preferredMediaType : PREFERRED_MEDIA_TYPES)
+		for(String preferredMediaType : ALL_MEDIA_TYPES)
 			if(acceptedMediaTypes.contains(preferredMediaType))
 				return preferredMediaType;
 		

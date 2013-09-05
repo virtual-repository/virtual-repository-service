@@ -22,12 +22,6 @@ import org.junit.runner.RunWith;
 
 import flexjson.JSONDeserializer;
 
-/**
- * Tests the key elements of application infrastructure and testing are in place.
- * 
- * @author Fabio Simeoni
- *
- */
 @RunWith(Arquillian.class)
 public class ServiceDescriptionTest {
 

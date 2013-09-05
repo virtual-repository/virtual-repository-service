@@ -1,15 +1,11 @@
 package org.virtualrepository.service.rest;
 
-import static javax.ws.rs.core.MediaType.*;
 import static org.virtualrepository.service.Constants.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Variant;
-import javax.ws.rs.core.Variant.VariantListBuilder;
 
 import org.virtualrepository.service.io.Binder;
 
@@ -21,7 +17,7 @@ import org.virtualrepository.service.io.Binder;
  */
 public enum VrsMediaType {
 
-	JSON(APPLICATION_JSON) {
+	JMOM(jmom) {
 
 		@Override
 		public String bind(Binder binder, Object object) {
@@ -30,7 +26,7 @@ public enum VrsMediaType {
 	},
 	
 	
-	XML(APPLICATION_XML) {
+	XMOM(xmom) {
 
 		@Override
 		public String bind(Binder binder, Object object) {
@@ -38,7 +34,7 @@ public enum VrsMediaType {
 		}
 	},
 	
-	VXML(APPLICATION_VXML) {
+	XOBJECT(xobject) {
 
 		@Override
 		public String bind(Binder binder, Object object) {
@@ -75,14 +71,14 @@ public enum VrsMediaType {
 		}
 	}
 
-	private final static Map<String, String> names = new HashMap<String, String>();
+	private final static Map<String, VrsMediaType> index = new HashMap<String, VrsMediaType>();
 
-	String standardName;
+	private MediaType type;
 
-	// prepares a mapping form enumeration values to standardName media type names
+	// prepares a mapping form enumeration values to standardName media type index
 	static {
 		for (VrsMediaType type : values())
-			names.put(type.standardName, type.name());
+			index.put(type.toString(), type);
 	}
 
 	/**
@@ -91,12 +87,20 @@ public enum VrsMediaType {
 	 * @param name the standardName name of the media type
 	 */
 	VrsMediaType(String name) {
-		this.standardName = name;
+		this.type= MediaType.valueOf(name);
+	}
+	
+	/**
+	 * Returns a {@link MediaType} that corresponds to this type.
+	 * @return the {@link MediaType}
+	 */
+	public MediaType type() {
+		return type;
 	}
 	
 	@Override
 	public String toString() {
-		return standardName;
+		return type.toString();
 	}
 
 	/**
@@ -119,31 +123,24 @@ public enum VrsMediaType {
 	}
 
 	/**
-	 * Return the {@link VrsMediaType} with a given standard name.
+	 * Return the {@link VrsMediaType} from its string representation.
 	 * 
-	 * @param name the standard name 
+	 * @param representation the string
 	 * @return the media type
 	 *         
-	 * @throws IllegalArgumentException if the request requires a media type which is not supported by the service
+	 * @throws IllegalArgumentException if string does not represent a known type
 	 */
-	public static VrsMediaType fromString(String name) {
+	public static VrsMediaType fromString(String representation) {
 
-			String match = names.get(name);
+			VrsMediaType match = index.get(representation);
 			
 			if (match==null)
-				throw new IllegalArgumentException("unexpected media type " + name);
+				throw new IllegalArgumentException("unexpected media type " + representation);
 			
-			return valueOf(match);
-	}
-	
-	public static List<Variant> supported() {
-		
-		VariantListBuilder builder = VariantListBuilder.newInstance();
-		
-		for (VrsMediaType type : values())
-			builder.mediaTypes(MediaType.valueOf(type.toString()));
-		
-		return builder.add().build();
+			return match;
 	}
 
+	public static void main(String[] args) {
+		System.out.println(fromString(jmom.toString()));
+	}
 }

@@ -8,12 +8,6 @@ import org.virtualrepository.VirtualRepository;
 import org.virtualrepository.impl.Repository;
 import org.virtualrepository.service.configuration.Configuration;
 
-/**
- * Tests the key elements of application infrastructure and testing are in place.
- * 
- * @author Fabio Simeoni
- *
- */
 public class ConfigurationTest {
 
 	@Test

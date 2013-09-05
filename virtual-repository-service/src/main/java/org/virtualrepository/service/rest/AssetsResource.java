@@ -3,7 +3,6 @@
  */
 package org.virtualrepository.service.rest;
 
-import static javax.ws.rs.core.MediaType.*;
 import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.rest.AssetsResource.*;
 import static org.virtualrepository.service.utils.Utils.*;
@@ -45,7 +44,7 @@ import org.virtualrepository.service.utils.Utils;
  */
 @Path(path)
 @Singleton
-@Produces({APPLICATION_JSON,APPLICATION_XML,APPLICATION_VXML})
+@Produces({jmom,xmom,xobject})
 public class AssetsResource {
 
 	private static Logger log = LoggerFactory.getLogger(AssetsResource.class);

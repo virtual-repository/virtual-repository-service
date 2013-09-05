@@ -3,13 +3,13 @@ package org.acme;
 import static com.sun.jersey.api.client.ClientResponse.Status.*;
 import static java.util.Arrays.*;
 import static javax.ws.rs.core.HttpHeaders.*;
-import static javax.ws.rs.core.MediaType.*;
 import static org.acme.utils.TestUtils.*;
 import static org.dynamicvalues.Dynamic.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.rest.AssetsResource.*;
+import static org.virtualrepository.service.rest.VrsMediaType.*;
 
 import java.io.StringReader;
 import java.net.URL;
@@ -44,12 +44,7 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 import flexjson.JSONDeserializer;
 
-/**
- * Tests the key elements of application infrastructure and testing are in place.
- * 
- * @author Fabio Simeoni
- * 
- */
+
 @RunWith(Arquillian.class)
 public class AssetsTest {
 
@@ -85,7 +80,7 @@ public class AssetsTest {
 	@Test
 	public void inJson(@ArquillianResource URL context) throws Exception {
 
-		String outcome = call().resource(at(context, path)).accept(APPLICATION_JSON).get(String.class);
+		String outcome = call().resource(at(context, path)).accept(JMOM.type()).get(String.class);
 
 		JSONDeserializer<List<?>> deserializer = new JSONDeserializer<List<?>>();
 
@@ -128,7 +123,7 @@ public class AssetsTest {
 	public void withSelectedTypesInJson(@ArquillianResource URL context) throws Exception {
 
 		String outcome = call().resource(at(context, path)).queryParam(typeParam, CsvCodelist.type.name())
-				.accept(APPLICATION_JSON).get(String.class);
+				.accept(JMOM.type()).get(String.class);
 
 		JSONDeserializer<List<?>> deserializer = new JSONDeserializer<List<?>>();
 
@@ -142,7 +137,7 @@ public class AssetsTest {
 	public void selectingAllTypeIsSameAsNotSelectingThemAtAll_InJson(@ArquillianResource URL context) throws Exception {
 
 		String outcome = call().resource(at(context, path)).queryParam(typeParam, CsvCodelist.type.name())
-				.queryParam(typeParam, SdmxCodelist.type.name()).accept(APPLICATION_JSON).get(String.class);
+				.queryParam(typeParam, SdmxCodelist.type.name()).accept(JMOM.type()).get(String.class);
 
 		JSONDeserializer<List<?>> deserializer = new JSONDeserializer<List<?>>();
 
@@ -156,7 +151,7 @@ public class AssetsTest {
 	public void selectingUnknownTypesIsa400(@ArquillianResource URL context) throws Exception {
 
 		ClientResponse response = call().resource(at(context, path)).queryParam(typeParam, "bad")
-				.accept(APPLICATION_JSON).get(ClientResponse.class);
+				.accept(JMOM.type()).get(ClientResponse.class);
 		
 		assertEquals(BAD_REQUEST, response.getClientResponseStatus());
 		
@@ -166,7 +161,7 @@ public class AssetsTest {
 	@Test
 	public void withRefreshInJson(@ArquillianResource URL context) throws Exception {
 
-		String outcome = call().resource(at(context, path)).accept(APPLICATION_JSON).get(String.class);
+		String outcome = call().resource(at(context, path)).accept(JMOM.type()).get(String.class);
 
 		JSONDeserializer<List<?>> deserializer = new JSONDeserializer<List<?>>();
 
@@ -176,7 +171,7 @@ public class AssetsTest {
 
 		csvAssets.add(new CsvCodelist("idnew", "standardName", 0));
 
-		outcome = call().resource(at(context, path)).accept(APPLICATION_JSON).method("POST", String.class);
+		outcome = call().resource(at(context, path)).accept(JMOM.type()).method("POST", String.class);
 
 		list = deserializer.deserialize(outcome);
 
@@ -190,7 +185,7 @@ public class AssetsTest {
 
 		WebResource resource = call().resource(at(context, path));
 
-		ClientResponse response = resource.accept(APPLICATION_VXML).get(ClientResponse.class);
+		ClientResponse response = resource.accept(xobject).get(ClientResponse.class);
 
 		Date lm = response.getLastModified();
 		
@@ -205,7 +200,7 @@ public class AssetsTest {
 
 		WebResource resource = call().resource(at(context, path));
 
-		ClientResponse response = resource.accept(APPLICATION_JSON).get(ClientResponse.class);
+		ClientResponse response = resource.accept(JMOM.type()).get(ClientResponse.class);
 
 		EntityTag tag = response.getEntityTag();
 		
@@ -220,7 +215,7 @@ public class AssetsTest {
 	@Test
 	public void inXml(@ArquillianResource URL context) throws Exception {
 
-		String outcome = call().resource(at(context, path)).accept(APPLICATION_XML).get(String.class);
+		String outcome = call().resource(at(context, path)).accept(XMOM.type()).get(String.class);
 
 		Unmarshaller um = DynamicIO.newInstance().createUnmarshaller();
 
@@ -233,7 +228,7 @@ public class AssetsTest {
 	@Test
 	public void inVXml(@ArquillianResource URL context) throws Exception {
 
-		String outcome = call().resource(at(context, path)).accept(APPLICATION_VXML).get(String.class);
+		String outcome = call().resource(at(context, path)).accept(XOBJECT.type()).get(String.class);
 
 		List<?> list = (List<?>) new XStream(new StaxDriver()).fromXML(outcome);
 

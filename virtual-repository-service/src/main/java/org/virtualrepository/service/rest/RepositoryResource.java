@@ -74,7 +74,7 @@ public class RepositoryResource extends AbstractResource {
 	
 	@GET
 	@Path("/meta/{id}")
-	@Produces(APPLICATION_VXML)
+	@Produces(xobject)
 	public Response getVXMLRepository(@PathParam("id") String id) {
 		try {
 			RepositoryService repo = this.doGetRepository(id);

@@ -89,7 +89,7 @@ public class AssetResource extends AbstractResource {
 	
 	@GET
 	@Path("/meta/{id}")
-	@Produces(APPLICATION_VXML)
+	@Produces(xobject)
 	public Response getVXMLAssetMetadata(@PathParam("id") String id) {
 		try {
 			return this.vxmlResponse(doLookupAsset(id));
@@ -111,7 +111,7 @@ public class AssetResource extends AbstractResource {
 
 			String mediaType = getProperMediaTypeFor(model, acceptHeader);
 
-			if(APPLICATION_VXML.equals(mediaType))
+			if(xobject.equals(mediaType))
 				return this.vxmlResponse(data);
 			else if(MediaType.APPLICATION_JSON.equals(mediaType))
 				return this.jsonResponse(data);

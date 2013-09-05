@@ -59,7 +59,7 @@ public class RepositoriesResource extends AbstractResource {
 	
 	@GET
 	@Path("/meta")
-	@Produces(APPLICATION_VXML)
+	@Produces(xobject)
 	public Response getVXMLRepositories() {
 		try {
 			return this.vxmlResponse(this.doGetServices());

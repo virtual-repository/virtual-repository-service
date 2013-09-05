@@ -118,7 +118,7 @@ abstract public class AbstractResource {
 	}
 	
 	protected Response vxmlResponse(Object object) throws Exception {
-		return Response.ok(this.vxmlify(object), APPLICATION_VXML).build();
+		return Response.ok(this.vxmlify(object), xobject).build();
 	}
 	
 	protected Response handleError(Throwable t) {

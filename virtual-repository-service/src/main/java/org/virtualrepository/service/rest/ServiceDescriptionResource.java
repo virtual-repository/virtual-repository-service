@@ -3,7 +3,7 @@
  */
 package org.virtualrepository.service.rest;
 
-import static javax.ws.rs.core.MediaType.*;
+import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.rest.ServiceDescriptionResource.*;
 
 import java.util.Properties;
@@ -41,7 +41,7 @@ public class ServiceDescriptionResource {
 	
 	
 	@GET
-	@Produces({APPLICATION_JSON,APPLICATION_XML})
+	@Produces({jmom,xmom})
 	public Properties describeInJson() {
 		
 		return configuration.properties();
