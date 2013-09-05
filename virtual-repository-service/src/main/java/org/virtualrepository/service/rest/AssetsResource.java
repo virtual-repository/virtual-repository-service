@@ -3,7 +3,8 @@
  */
 package org.virtualrepository.service.rest;
 
-import static javax.ws.rs.core.Response.*;
+import static javax.ws.rs.core.MediaType.*;
+import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.rest.AssetsResource.*;
 import static org.virtualrepository.service.utils.Utils.*;
 
@@ -19,13 +20,13 @@ import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Variant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,6 @@ import org.virtualrepository.Asset;
 import org.virtualrepository.AssetType;
 import org.virtualrepository.VirtualRepository;
 import org.virtualrepository.service.configuration.Configuration;
-import org.virtualrepository.service.io.Binder;
 import org.virtualrepository.service.utils.Utils;
 
 /**
@@ -45,6 +45,7 @@ import org.virtualrepository.service.utils.Utils;
  */
 @Path(path)
 @Singleton
+@Produces({APPLICATION_JSON,APPLICATION_XML,APPLICATION_VXML})
 public class AssetsResource {
 
 	private static Logger log = LoggerFactory.getLogger(AssetsResource.class);
@@ -54,16 +55,14 @@ public class AssetsResource {
 
 	private final VirtualRepository repository;
 	private final Configuration configuration;
-	private final Binder binder;
-
+	
 	private Calendar lastRefresh;
 
 	@Inject
-	public AssetsResource(VirtualRepository repository, Configuration configuration, Binder binder) {
+	public AssetsResource(VirtualRepository repository, Configuration configuration) {
 
 		this.repository = repository;
 		this.configuration = configuration;
-		this.binder = binder;
 
 	}
 
@@ -73,36 +72,21 @@ public class AssetsResource {
 	}
 
 	@GET
-	public Response get(@Context UriInfo info, @Context Request request) {
+	public Response get(@QueryParam(typeParam) List<String> typeNames, @Context Request request) {
 
-		List<Variant> supportedTypes = VrsMediaType.supported();
-		
-		//media type selection
-		Variant preferred = request.selectVariant(supportedTypes);
-		
-		if (preferred==null)
-			return notAcceptable(supportedTypes).build();
-
-		
-		//conditional get
 		Response unchanged = evaluateChange(request);
 
 		if (unchanged != null)
 			return unchanged;
 
 		
-		
-		Collection<AssetType> types = typesFrom(info);
+		Collection<AssetType> types = typesFrom(typeNames);
 
 		Collection<Asset> assets = assetsFor(types);
 			
-		VrsMediaType type = VrsMediaType.fromString(preferred.getMediaType().toString());
-			
-		String outcome = type.bind(assets).with(binder);
+		log.info("returning metadata about {} assets of types: {}", assets.size(), types);
 
-		log.info("returning metadata in {} about {} assets of types: {}", type, assets.size(), types);
-
-		return ok(outcome);
+		return ok(assets);
 
 	}
 	
@@ -110,19 +94,17 @@ public class AssetsResource {
 
 
 	@POST
-	public Response refreshAndGet(@Context UriInfo info, @Context Request request) {
+	public Response refreshAndGet(@QueryParam(typeParam) List<String> typeNames, @Context Request request) {
 
-		refresh(typesFrom(info));
+		refresh(typesFrom(typeNames));
 
-		return get(info, request);
+		return get(typeNames, request);
 	}
 
 	// helpers
-	Collection<AssetType> typesFrom(UriInfo info) {
+	Collection<AssetType> typesFrom(List<String> typeNames) {
 
 		List<AssetType> types = new ArrayList<AssetType>();
-
-		List<String> typeNames = info.getQueryParameters().get(typeParam);
 
 		AssetType[] knownTypes = configuration.assetTypes();
 
@@ -173,7 +155,7 @@ public class AssetsResource {
 
 	// helpers
 
-	private Response ok(String outcome) {
+	private Response ok(Object outcome) {
 
 		return Response.ok(outcome).lastModified(lastRefresh.getTime()).tag(etag()).build();
 	}

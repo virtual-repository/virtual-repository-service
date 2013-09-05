@@ -37,6 +37,7 @@ import org.virtualrepository.service.utils.CdiProducers;
 import org.virtualrepository.spi.ServiceProxy;
 
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
@@ -105,6 +106,20 @@ public class AssetsTest {
 		List<?> list = deserializer.deserialize(outcome);
 
 		assertEquals(csvAssets.size() + sdmxAssets.size(), list.size());
+
+	}
+	
+	@Test
+	public void usingUnsupportedType(@ArquillianResource URL context) throws Exception {
+
+		try {
+			call().resource(at(context, path)).accept("unsupported").get(String.class);
+			fail();
+		}
+		catch(UniformInterfaceException e) {
+			assertEquals(NOT_ACCEPTABLE,e.getResponse().getClientResponseStatus());
+		}
+
 
 	}
 

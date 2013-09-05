@@ -70,7 +70,7 @@ public enum VrsMediaType {
 		 * @param binder the {@link Binder} to use for the binding
 		 * @return the binding
 		 */
-		String with(Binder binder) {
+		public String with(Binder binder) {
 			return bind(binder, object);
 		}
 	}

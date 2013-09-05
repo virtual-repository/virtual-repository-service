@@ -4,20 +4,17 @@
 package org.virtualrepository.service.rest;
 
 import static javax.ws.rs.core.MediaType.*;
-import static javax.ws.rs.core.Response.*;
-import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.rest.ServiceDescriptionResource.*;
-import static org.virtualrepository.service.rest.VrsMediaType.*;
+
+import java.util.Properties;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
 
 import org.virtualrepository.service.configuration.Configuration;
-import org.virtualrepository.service.io.Binder;
 
 
 /**
@@ -33,30 +30,21 @@ public class ServiceDescriptionResource {
 	
 	public static final String path = "/";
 	
-	private final Binder binder;
 	private final Configuration configuration;
 	
 
 	@Inject
-	public ServiceDescriptionResource(Configuration configuration,Binder binder) {
+	public ServiceDescriptionResource(Configuration configuration) {
 	
 		this.configuration=configuration;
-		this.binder=binder;
 	}
 	
 	
 	@GET
-	@Produces(APPLICATION_JSON)
-	public Response describeInJson() {
+	@Produces({APPLICATION_JSON,APPLICATION_XML})
+	public Properties describeInJson() {
 		
-		return ok(JSON.bind(configuration.properties()).with(binder)).build();
+		return configuration.properties();
 
-	}
-	
-	@GET
-	@Produces(APPLICATION_XML+SECONDARY)
-	public Response describeInXml() {
-		
-		return ok(XML.bind(configuration.properties()).with(binder)).build();
 	}
 }

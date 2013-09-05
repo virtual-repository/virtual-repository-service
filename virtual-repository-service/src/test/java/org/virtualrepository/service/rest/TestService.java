@@ -10,6 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.namespace.QName;
 
@@ -21,19 +23,20 @@ import org.virtualrepository.VirtualRepository;
 
 @Path("/test")
 @Singleton
-public class CdiService  {
+public class TestService  {
 
-	private static final Logger log = LoggerFactory.getLogger(CdiService.class);
+	private static final Logger log = LoggerFactory.getLogger(TestService.class);
 	
-	public static final String path = "/cdi";
+	public static final String inject_path = "/inject";
+	public static final String negotiated_path = "/negotiated";
 	
 	@Inject
 	VirtualRepository bean;
 	
 	
 	@GET
-	@Path(path)
-	public Response test() {
+	@Path(inject_path)
+	public Response injected() {
 		
 		//logging works
 		log.info("logging setup");
@@ -45,5 +48,17 @@ public class CdiService  {
 		bean.services().contains(new QName(InfrastructureTest.test_service));
 		
 		return ok().build();
+	}
+	
+	@GET
+	@Path(negotiated_path)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Object negotiated() {
+		
+		@SuppressWarnings("unused")
+		Object outcome = new Object(){
+			String foo="bar";
+		};
+		return ok(outcome).build();
 	}
 }
