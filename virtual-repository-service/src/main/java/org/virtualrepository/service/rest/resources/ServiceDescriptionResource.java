@@ -1,10 +1,10 @@
 /**
  * (c) 2013 FAO / UN (project: virtual-repository-service)
  */
-package org.virtualrepository.service.rest;
+package org.virtualrepository.service.rest.resources;
 
 import static org.virtualrepository.service.Constants.*;
-import static org.virtualrepository.service.rest.ServiceDescriptionResource.*;
+import static org.virtualrepository.service.rest.resources.ServiceDescriptionResource.*;
 
 import java.util.Properties;
 

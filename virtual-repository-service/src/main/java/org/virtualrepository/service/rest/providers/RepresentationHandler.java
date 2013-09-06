@@ -23,14 +23,14 @@ import org.virtualrepository.service.rest.VrsMediaType;
  *
  */
 @Provider @Singleton
-public class RepresentationWriter implements MessageBodyWriter<Object> {
+public class RepresentationHandler implements MessageBodyWriter<Object> {
 
 	@Inject 
 	private Binder binder;
 	
 	@Override
 	public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-		//applies to all responses, but those already serialised
+		//applies to all responses, but those that appear already serialised, e.g. errors from barrier
 		return type!=String.class;
 	}
 	
@@ -40,7 +40,7 @@ public class RepresentationWriter implements MessageBodyWriter<Object> {
 			WebApplicationException {
 		
 		//dispatches conversion to based on media type
-
+		
 		VrsMediaType negotiated = VrsMediaType.fromMediaType(mediaType);
 		
 		entityStream.write(negotiated.bind(object).with(binder).getBytes());

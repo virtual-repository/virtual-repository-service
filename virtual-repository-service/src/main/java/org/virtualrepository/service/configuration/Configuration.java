@@ -14,6 +14,7 @@ import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import org.virtualrepository.RepositoryService;
 import org.virtualrepository.VirtualRepository;
 import org.virtualrepository.service.Constants;
 
+@Singleton
 public class Configuration {
 
 	private static final Logger log = LoggerFactory.getLogger(Configuration.class);
@@ -43,7 +45,7 @@ public class Configuration {
 			loadProperties();
 			
 			if (!areValidProperties())
-				throw new RuntimeException("missing required properties in "+properties.keySet());
+				throw new RuntimeException("missing required properties or invalid properties in "+properties.keySet());
 			
 			addDerivedProperties();
 			
@@ -56,6 +58,12 @@ public class Configuration {
 		}
 		
 		
+	}
+	
+	
+	public int responseTTL() {
+		
+		return (Integer) properties.get(config_ttl_name);
 	}
 	
 	public AssetType[] assetTypes() {
@@ -103,8 +111,11 @@ public class Configuration {
 	private boolean areValidProperties() {
 		
 		return 
-			this.properties.containsKey(config_endpoint_name) &&
-			this.properties.containsKey(config_virtual_repository) ;
+			properties.containsKey(config_endpoint_name) &&
+			properties.containsKey(config_virtual_repository) && 
+			(!properties.containsKey(config_ttl_name) ||
+				isNumber((String)properties.get(config_ttl_name))
+			);
 	}
 	
 	private void addDerivedProperties() {
@@ -114,6 +125,19 @@ public class Configuration {
 		for(AssetType type : assetTypes())
 			names.add(type.name());
 		
-		this.properties.put(configTypesProperty,names);
+		properties.put(configTypesProperty,names);
+		
+		if (!properties.containsKey(config_ttl_name))
+			properties.put(config_ttl_name, default_ttl_);
+	}
+	
+	private boolean isNumber(String s) {
+		try {
+			Integer.valueOf(s);
+			return true;
+		}
+		catch(NumberFormatException e) {
+			return false;
+		}
 	}
 }

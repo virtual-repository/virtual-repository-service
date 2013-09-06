@@ -8,8 +8,8 @@
 	<listener>
 		<listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
 	</listener>
-	
-	
+
+
 	<listener>
 		<listener-class>org.virtualrepository.service.utils.UndeployListener</listener-class>
 	</listener>
@@ -20,7 +20,11 @@
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
 		<init-param>
 			<param-name>com.sun.jersey.config.property.packages</param-name>
-			<param-value>org.virtualrepository.service.rest, org.virtualrepository.service.utils</param-value>
+			<param-value>org.virtualrepository.service.rest</param-value>
+		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.spi.container.ResourceFilters</param-name>
+			<param-value>org.virtualrepository.service.rest.filters.FilterFactory</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -29,5 +33,5 @@
 		<servlet-name>vrs</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
-	
+
 </web-app>

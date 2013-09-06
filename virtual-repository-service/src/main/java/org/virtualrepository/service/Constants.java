@@ -11,22 +11,32 @@ import javax.ws.rs.core.MediaType;
 public class Constants {
 
 	/**
-	 * The name of the org.virtualrepository.service.configuration file
+	 * The name of the configuration file.
 	 */
 	public static final String configFile = "configuration.properties";
 
 	/**
-	 * The name of the org.virtualrepository.service.configuration property with the known asset types.
+	 * The name of the configuration property with the known asset types.
 	 */
 	public static final String configTypesProperty = "asset-types";
 
 	/**
-	 * The name of the org.virtualrepository.service.configuration property with the name of the service endpoint.
+	 * The name of the configuration property with the name of the service endpoint.
 	 */
 	public static final String config_endpoint_name = "service-name";
+	
+	/**
+	 * The default time-to-leave of responses.
+	 */
+	public static final int default_ttl_ = 3600;
+	
+	/**
+	 * The name of the configuration property with the time-to-live of responses.
+	 */
+	public static final String config_ttl_name = "response-ttl";
 
 	/**
-	 * The name of the org.virtualrepository.service.configuration property with the version of the virtual repository.
+	 * The name of the configuration property with the version of the virtual repository.
 	 */
 	public static final String config_virtual_repository = "virtual-repository";
 

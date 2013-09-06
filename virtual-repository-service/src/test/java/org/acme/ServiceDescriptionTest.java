@@ -3,7 +3,7 @@ package org.acme;
 import static javax.ws.rs.core.MediaType.*;
 import static org.acme.utils.TestUtils.*;
 import static org.dynamicvalues.Dynamic.*;
-import static org.virtualrepository.service.rest.ServiceDescriptionResource.*;
+import static org.virtualrepository.service.rest.resources.ServiceDescriptionResource.*;
 
 import java.io.StringReader;
 import java.net.URL;

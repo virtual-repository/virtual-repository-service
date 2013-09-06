@@ -8,8 +8,8 @@ import static org.dynamicvalues.Dynamic.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.virtualrepository.service.Constants.*;
-import static org.virtualrepository.service.rest.AssetsResource.*;
 import static org.virtualrepository.service.rest.VrsMediaType.*;
+import static org.virtualrepository.service.rest.resources.AssetsResource.*;
 
 import java.io.StringReader;
 import java.net.URL;

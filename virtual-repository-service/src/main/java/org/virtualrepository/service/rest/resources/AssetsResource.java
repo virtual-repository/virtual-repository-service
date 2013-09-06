@@ -1,11 +1,11 @@
 /**
  * (c) 2013 FAO / UN (project: virtual-repository-service)
  */
-package org.virtualrepository.service.rest;
+package org.virtualrepository.service.rest.resources;
 
 import static org.virtualrepository.service.Constants.*;
-import static org.virtualrepository.service.rest.AssetsResource.*;
 import static org.virtualrepository.service.rest.errors.Error.*;
+import static org.virtualrepository.service.rest.resources.AssetsResource.*;
 import static org.virtualrepository.service.utils.Utils.*;
 
 import java.util.ArrayList;
@@ -177,7 +177,10 @@ public class AssetsResource {
 
 	private Response ok(Object outcome) {
 
-		return Response.ok(outcome).lastModified(lastRefresh.getTime()).tag(etag()).build();
+		return Response.ok(outcome)
+				//add validators
+				.lastModified(lastRefresh.getTime())
+				.tag(etag()).build();
 	}
 	
 	private EntityTag etag() {
