@@ -23,11 +23,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +42,7 @@ import org.virtualrepository.service.utils.Utils;
 @Path(path)
 @Singleton
 @Produces({jmom,xmom,xobject})
-public class AssetsResource {
+public class AssetsResource implements Cacheable {
 
 	private static Logger log = LoggerFactory.getLogger(AssetsResource.class);
 	
@@ -74,16 +69,10 @@ public class AssetsResource {
 
 	@GET
 	@Path("{id}")
-	public Response getOne(@PathParam("id") String id, @Context Request request) {
-
-		Response unchanged = evaluateChange(request);
-
-		if (unchanged != null)
-			return unchanged;
+	public Asset getOne(@PathParam("id") String id) {
 
 		try {
-			Asset asset = repository.lookup(id);
-			return ok(asset);
+			return repository.lookup(id);
 		}
 		catch(IllegalStateException e) {
 			throw no_such_asset.toException("unknown asset "+id);
@@ -92,12 +81,7 @@ public class AssetsResource {
 	}
 	
 	@GET
-	public Response get(@QueryParam(typeParam) List<String> typeNames, @Context Request request) {
-
-		Response unchanged = evaluateChange(request);
-
-		if (unchanged != null)
-			return unchanged;
+	public Collection<Asset> get(@QueryParam(typeParam) List<String> typeNames) {
 
 		
 		Collection<AssetType> types = typesFrom(typeNames);
@@ -106,7 +90,7 @@ public class AssetsResource {
 			
 		log.info("returning metadata about {} assets of types: {}", assets.size(), types);
 
-		return ok(assets);
+		return assets;
 
 	}
 	
@@ -114,11 +98,11 @@ public class AssetsResource {
 
 
 	@POST
-	public Response refreshAndGet(@QueryParam(typeParam) List<String> typeNames, @Context Request request) {
+	public Collection<Asset> refreshAndGet(@QueryParam(typeParam) List<String> typeNames) {
 
 		refresh(typesFrom(typeNames));
 
-		return get(typeNames, request);
+		return get(typeNames);
 	}
 
 	// helpers
@@ -172,26 +156,13 @@ public class AssetsResource {
 			Utils.rethrow("could not refresh assets (see cause)", e);
 		}
 	}
-
-	// helpers
-
-	private Response ok(Object outcome) {
-
-		return Response.ok(outcome)
-				//add validators
-				.lastModified(lastRefresh.getTime())
-				.tag(etag()).build();
+	
+	@Override
+	public Calendar lastModified() {
+		return lastRefresh;
 	}
 	
-	private EntityTag etag() {
-		return new EntityTag(String.valueOf(lastRefresh.getTimeInMillis()));
-	}
-
-	private Response evaluateChange(Request request) {
-
-		//if not null, adds etag header
-		ResponseBuilder builder = request.evaluatePreconditions(lastRefresh.getTime(),etag());
-		
-		return builder == null ? null : builder.build();
+	public String etag() {
+		return String.valueOf(lastRefresh.getTimeInMillis());
 	}
 }
