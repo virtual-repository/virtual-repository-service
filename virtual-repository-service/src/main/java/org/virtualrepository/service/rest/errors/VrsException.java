@@ -7,7 +7,7 @@ package org.virtualrepository.service.rest.errors;
  * @author Fabio Simeoni
  *
  */
-public class ServiceException extends RuntimeException {
+public class VrsException extends RuntimeException {
 
 	
 	/**
@@ -21,7 +21,7 @@ public class ServiceException extends RuntimeException {
 	 * Creates an instance with an underlying error.
 	 * @param error the error
 	 */
-	public ServiceException(Error error) {
+	public VrsException(Error error) {
 		this(error, error.message());
 	}
 	
@@ -30,7 +30,7 @@ public class ServiceException extends RuntimeException {
 	 * @param message the message
 	 * @param error the error
 	 */
-	public ServiceException(Error error,String message) {
+	public VrsException(Error error,String message) {
 		super(message);
 		this.error=error;
 	}
@@ -40,7 +40,7 @@ public class ServiceException extends RuntimeException {
 	 * @param error the error
 	 * @param cause the cause;
 	 */
-	public ServiceException(Error error,Throwable cause) {
+	public VrsException(Error error,Throwable cause) {
 		this(error, cause, error.message());
 	}
 	
@@ -50,7 +50,7 @@ public class ServiceException extends RuntimeException {
 	 * @param cause the cause;
 	 * @Param message the message;
 	 */
-	public ServiceException(Error error,Throwable cause,String message) {
+	public VrsException(Error error,Throwable cause,String message) {
 		super(message,cause);
 		this.error=error;
 	}

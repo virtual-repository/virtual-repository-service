@@ -8,14 +8,14 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.virtualrepository.service.rest.errors.ServiceException;
+import org.virtualrepository.service.rest.errors.VrsException;
 
 public class ErrorBarrier {
 
 	@Provider
-	public static class ServiceExceptionMapper implements ExceptionMapper<ServiceException> {
+	public static class ServiceExceptionMapper implements ExceptionMapper<VrsException> {
 		
-		public Response toResponse(ServiceException e) {
+		public Response toResponse(VrsException e) {
 			return response(e.error().status(),e);
 		}
 	}

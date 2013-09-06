@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response.Status;
 /**
  * Known error types.
  * <p>
- * Each type can throw a corresponding {@link ServiceException}.
+ * Each type can throw a corresponding {@link VrsException}.
  * 
  * @author Fabio Simeoni
  *
@@ -60,20 +60,20 @@ public enum Error {
 		throw toException(msg,cause);
 	}
 	
-	public ServiceException toException() {
-		return new ServiceException(this);
+	public VrsException toException() {
+		return new VrsException(this);
 	}
 	
-	public ServiceException toException(String msg) {
-		return new ServiceException(this, msg);
+	public VrsException toException(String msg) {
+		return new VrsException(this, msg);
 	}
 	
-	public ServiceException toException(Throwable cause) {
-		return new ServiceException(this,cause);
+	public VrsException toException(Throwable cause) {
+		return new VrsException(this,cause);
 	}
 	
-	public ServiceException toException(String msg,Throwable cause) {
-		return new ServiceException(this,cause,msg);
+	public VrsException toException(String msg,Throwable cause) {
+		return new VrsException(this,cause,msg);
 	}
 	
 	

@@ -5,6 +5,7 @@ import static javax.ws.rs.core.HttpHeaders.*;
 import java.util.Date;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Response;
@@ -27,7 +28,7 @@ import com.sun.jersey.spi.container.ResourceFilter;
  * @author Fabio Simeoni
  *
  */
-public class CachingFilter implements ResourceFilter, ContainerResponseFilter {
+public class CachingFilter implements ResourceFilter, ContainerRequestFilter, ContainerResponseFilter {
 
 	
 	private final CacheControl directives;
@@ -44,26 +45,45 @@ public class CachingFilter implements ResourceFilter, ContainerResponseFilter {
 										directivesFrom(cache, configuration);
 		
 	}
+	
+	@Override
+	public ContainerRequest filter(ContainerRequest request) {
+		
+		if (isCacheable()) { //add validators
+			
+			Object resource = context.getResource(method.getResource().getResourceClass());
+			
+			if (resource instanceof Cacheable) {
+				
+				Cacheable cacheable = Cacheable.class.cast(resource);
+				
+				Response nochange = prepareNoChangeFor(request, cacheable);
+				
+				if (nochange!=null)
+					//weird but works: we do not actually communicate an error here but bypass resource and go
+					//straight to response filter
+					throw new WebApplicationException(nochange);
+				
+			}
+		}
+		return request;
+		
+	}
 
 	@Override
 	public ContainerResponse filter(ContainerRequest request, ContainerResponse response) {
 
 		//dont act on errors or in the lack of directives (e.g. on POST)
-		if (response.getStatus()<400 && directives!=null) {
+		if (!isError(response) && isCacheable()) {
 		
 			ResponseBuilder builder = Response.fromResponse(response.getResponse());
 			
 			//add validators if cacheable
 			Object resource = context.getResource(method.getResource().getResourceClass());
 			
-			Cacheable cacheable = Cacheable.class.cast(resource);
-			
 			if (resource instanceof Cacheable) {
-				
-				Response nochange = prepareNoChangeFor(request, cacheable);
-				
-				if (nochange!=null)
-					builder=Response.fromResponse(nochange);
+			
+				Cacheable cacheable = Cacheable.class.cast(resource);
 				
 				builder.lastModified(cacheable.lastModified().getTime()).tag(cacheable.etag());
 				
@@ -83,10 +103,11 @@ public class CachingFilter implements ResourceFilter, ContainerResponseFilter {
 		return response;
 		
 	}
+	
 
 	@Override
 	public ContainerRequestFilter getRequestFilter() {
-		return null;
+		return this;
 	}
 
 	@Override
@@ -117,6 +138,14 @@ public class CachingFilter implements ResourceFilter, ContainerResponseFilter {
 		directives.setMaxAge(configuration.responseTTL());
 		
 		return directives;
+	}
+	
+	private boolean isCacheable() {
+		return directives!=null; 
+	}
+	
+	private boolean isError(ContainerResponse response) {
+		return response.getStatus()>=400; //can we do better than this?
 	}
 	
 	private Response prepareNoChangeFor(ContainerRequest request, Cacheable resource) {
