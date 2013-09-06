@@ -71,14 +71,14 @@ public enum VrsMediaType {
 		}
 	}
 
-	private final static Map<String, VrsMediaType> index = new HashMap<String, VrsMediaType>();
+	private final static Map<MediaType, VrsMediaType> index = new HashMap<MediaType, VrsMediaType>();
 
 	private MediaType type;
 
 	// prepares a mapping form enumeration values to standardName media type index
 	static {
 		for (VrsMediaType type : values())
-			index.put(type.toString(), type);
+			index.put(type.type(), type);
 	}
 
 	/**
@@ -123,24 +123,20 @@ public enum VrsMediaType {
 	}
 
 	/**
-	 * Return the {@link VrsMediaType} from its string representation.
+	 * Return the {@link VrsMediaType} from the corresponding {@link MediaType}.
 	 * 
-	 * @param representation the string
-	 * @return the media type
+	 * @param type the {@link MediaType}
+	 * @return the corresponding {@link VrsMediaType}
 	 *         
 	 * @throws IllegalArgumentException if string does not represent a known type
 	 */
-	public static VrsMediaType fromString(String representation) {
+	public static VrsMediaType fromMediaType(MediaType type) {
 
-			VrsMediaType match = index.get(representation);
+			VrsMediaType match = index.get(type);
 			
 			if (match==null)
-				throw new IllegalArgumentException("unexpected media type " + representation);
+				throw new IllegalArgumentException("unexpected media type " + type);
 			
 			return match;
-	}
-
-	public static void main(String[] args) {
-		System.out.println(fromString(jmom.toString()));
 	}
 }

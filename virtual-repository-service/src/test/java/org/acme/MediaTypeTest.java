@@ -13,7 +13,7 @@ public class MediaTypeTest {
 		for (VrsMediaType type : VrsMediaType.values()) {
 			assertNotNull(type.type());
 			assertEquals(type.type().toString(),type.toString());
-			assertSame(type,VrsMediaType.fromString(type.toString()));
+			assertSame(type,VrsMediaType.fromMediaType(type.type()));
 		}
 	}
 		

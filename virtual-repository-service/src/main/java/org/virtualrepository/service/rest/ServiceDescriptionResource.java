@@ -42,7 +42,7 @@ public class ServiceDescriptionResource {
 	
 	@GET
 	@Produces({jmom,xmom})
-	public Properties describeInJson() {
+	public Properties describe() {
 		
 		return configuration.properties();
 

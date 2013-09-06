@@ -41,7 +41,7 @@ public class RepresentationWriter implements MessageBodyWriter<Object> {
 		
 		//dispatches conversion to based on media type
 
-		VrsMediaType negotiated = VrsMediaType.fromString(mediaType.toString());
+		VrsMediaType negotiated = VrsMediaType.fromMediaType(mediaType);
 		
 		entityStream.write(negotiated.bind(object).with(binder).getBytes());
 		
