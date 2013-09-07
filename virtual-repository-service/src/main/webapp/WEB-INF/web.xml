@@ -26,6 +26,10 @@
 			<param-name>com.sun.jersey.spi.container.ResourceFilters</param-name>
 			<param-value>org.virtualrepository.service.rest.filters.FilterFactory</param-value>
 		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+			<param-value>org.virtualrepository.service.rest.filters.UriAdapter</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 

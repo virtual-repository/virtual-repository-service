@@ -1,9 +1,12 @@
 package org.acme;
 
 import static com.sun.jersey.api.client.ClientResponse.Status.*;
+import static javax.ws.rs.core.HttpHeaders.*;
 import static javax.ws.rs.core.MediaType.*;
 import static org.acme.utils.TestUtils.*;
 import static org.junit.Assert.*;
+import static org.virtualrepository.service.rest.TestService.*;
+import static org.virtualrepository.service.rest.VrsMediaType.*;
 
 import java.net.URL;
 
@@ -15,7 +18,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.virtualrepository.RepositoryService;
-import org.virtualrepository.service.rest.TestService;
 import org.virtualrepository.service.utils.CdiProducers;
 import org.virtualrepository.spi.ServiceProxy;
 
@@ -32,13 +34,6 @@ public class InfrastructureTest {
 
 	public static final String test_service = "test-service";
 	
-	static final String testPath = "/test";
-	static final String negotiated = testPath + TestService.negotiated_path;
-	static final String injected = testPath + TestService.inject_path;
-
-
-
-
 	@Deployment(testable = false)
 	public static WebArchive deploy() {
 		return TestUtils.war();
@@ -50,14 +45,14 @@ public class InfrastructureTest {
 		CdiProducers.repository().services().add(mockRepository());
 
 		// assertion of injection is in test servlet
-		call().resource(at(root,injected)).get(String.class);
+		call().resource(at(root,path+injected_path)).get(String.class);
 
 	}
 
 	@Test
 	public void negotiatedBasedOnPreference(@ArquillianResource URL root) throws Exception {
 
-		ClientResponse response = call().resource(at(root, negotiated)).get(ClientResponse.class);
+		ClientResponse response = call().resource(at(root,path+negotiated_path)).accept(JMOM.toString()).get(ClientResponse.class);
 
 		assertEquals(OK, response.getClientResponseStatus());
 		assertEquals(APPLICATION_JSON_TYPE, response.getType());
@@ -67,7 +62,7 @@ public class InfrastructureTest {
 	@Test
 	public void negotiatedBasedOnDefault(@ArquillianResource URL root) throws Exception {
 
-		ClientResponse response = call().resource(at(root, negotiated)).get(ClientResponse.class);
+		ClientResponse response = call().resource(at(root,path+negotiated_path)).get(ClientResponse.class);
 
 		assertEquals(OK, response.getClientResponseStatus());
 		assertEquals(APPLICATION_JSON_TYPE, response.getType());
@@ -77,9 +72,24 @@ public class InfrastructureTest {
 	@Test
 	public void unnegotiated(@ArquillianResource URL root) throws Exception {
 
-		ClientResponse response  = call().resource(at(root,negotiated)).accept("text/unsupported").get(ClientResponse.class);
+		ClientResponse response  = call().resource(at(root,path+negotiated_path)).accept("text/unsupported").get(ClientResponse.class);
 		
 		assertEquals(NOT_ACCEPTABLE, response.getClientResponseStatus());
+
+	}
+	
+	@Test
+	public void adapted(@ArquillianResource URL root) throws Exception {
+
+		ClientResponse response  = call().resource(at(root,path+adapted_path))
+				.queryParam("foo","bar") //'native' params are retained
+				.queryParam(ACCEPT,JMOM.toString()) //'header' params are added to headers
+				.accept(XMOM.type()) //existing headers are retained
+				.get(ClientResponse.class);
+		
+		assertEquals(OK.getStatusCode(), response.getStatus());
+		
+		assertEquals(JMOM.toString(), response.getHeaders().getFirst(CONTENT_TYPE));
 
 	}
 
