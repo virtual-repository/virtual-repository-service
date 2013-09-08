@@ -17,9 +17,6 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.virtualrepository.RepositoryService;
-import org.virtualrepository.service.utils.CdiProducers;
-import org.virtualrepository.spi.ServiceProxy;
 
 import com.sun.jersey.api.client.ClientResponse;
 
@@ -41,8 +38,6 @@ public class InfrastructureTest {
 
 	@Test
 	public void injected(@ArquillianResource URL root) throws Exception {
-
-		CdiProducers.repository().services().add(mockRepository());
 
 		// assertion of injection is in test servlet
 		call().resource(at(root,path+injected_path)).get(String.class);
@@ -90,14 +85,6 @@ public class InfrastructureTest {
 		assertEquals(OK.getStatusCode(), response.getStatus());
 		
 		assertEquals(JMOM.toString(), response.getHeaders().getFirst(CONTENT_TYPE));
-
-	}
-
-	// helper
-	private RepositoryService mockRepository() {
-
-		ServiceProxy proxy = aProxy().get();
-		return aService().name(test_service).with(proxy).get();
 
 	}
 }

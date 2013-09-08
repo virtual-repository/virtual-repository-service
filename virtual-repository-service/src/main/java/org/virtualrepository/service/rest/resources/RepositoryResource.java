@@ -1,5 +1,5 @@
 /**
- * (c) 2013 FAO / UN (project: virtual-repository-service)
+ * (c) 2013 FAO / UN (project: virtual-produced-service)
  */
 package org.virtualrepository.service.rest.resources;
 
@@ -29,7 +29,7 @@ import com.sun.jersey.spi.resource.Singleton;
  * @version 1.0
  * @since 27 Aug 2013
  */
-@Path("/repository")
+@Path("/produced")
 @Singleton
 public class RepositoryResource extends AbstractResource {
 	private RepositoryService doGetRepository(String id) {
@@ -48,7 +48,7 @@ public class RepositoryResource extends AbstractResource {
 			RepositoryService repo = this.doGetRepository(id);
 			
 			if(repo == null)
-				return this.notFound("Unknown repository '" + id + "'");
+				return this.notFound("Unknown produced '" + id + "'");
 			
 			return this.jsonResponse(repo);
 		} catch(Throwable t) {
@@ -64,7 +64,7 @@ public class RepositoryResource extends AbstractResource {
 			RepositoryService repo = this.doGetRepository(id);
 			
 			if(repo == null)
-				return this.notFound("Unknown repository '" + id + "'");
+				return this.notFound("Unknown produced '" + id + "'");
 			
 			return this.xmlResponse(repo);
 		} catch(Throwable t) {
@@ -80,7 +80,7 @@ public class RepositoryResource extends AbstractResource {
 			RepositoryService repo = this.doGetRepository(id);
 			
 			if(repo == null)
-				return this.notFound("Unknown repository '" + id + "'");
+				return this.notFound("Unknown produced '" + id + "'");
 			
 			return this.vxmlResponse(repo);
 		} catch(Throwable t) {

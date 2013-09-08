@@ -1,5 +1,5 @@
 /**
- * (c) 2013 FAO / UN (project: virtual-repository-service)
+ * (c) 2013 FAO / UN (project: virtual-produced-service)
  */
 package org.virtualrepository.service.rest.resources;
 
@@ -147,10 +147,8 @@ public class AssetsResource implements Cacheable {
 
 			int added = repository.discover(types);
 
-			if (added > 0)
+			if (added > 0 || lastRefresh==null)
 				lastRefresh = Calendar.getInstance();
-
-			System.err.println(lastRefresh.getTime());
 
 		} catch (Exception e) {
 			Utils.rethrow("could not refresh assets (see cause)", e);

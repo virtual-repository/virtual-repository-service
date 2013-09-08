@@ -23,7 +23,7 @@ import com.sun.jersey.spi.container.ContainerResponseFilter;
 import com.sun.jersey.spi.container.ResourceFilter;
 
 /**
- * Intercepts responses to set cache-related HTTP headers based on explicit {@link CacheDirectives} or defaults.
+ * Intercepts responses to set cache-related HTTP headers based on explicit {@link Fake} or defaults.
  * 
  * @author Fabio Simeoni
  *

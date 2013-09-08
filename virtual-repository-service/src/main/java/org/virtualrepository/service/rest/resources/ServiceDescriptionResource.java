@@ -1,5 +1,5 @@
 /**
- * (c) 2013 FAO / UN (project: virtual-repository-service)
+ * (c) 2013 FAO / UN (project: virtual-produced-service)
  */
 package org.virtualrepository.service.rest.resources;
 
