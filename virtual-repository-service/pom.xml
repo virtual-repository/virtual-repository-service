@@ -13,6 +13,7 @@
 		<jersey.version>1.17.1</jersey.version>
 		<weld.version>2.0.3.Final</weld.version>
 		<tomcat.version>7.0.42</tomcat.version>
+		<resources.directory>resources</resources.directory>
 	</properties>
 
 	<repositories>
@@ -205,13 +206,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.jboss.arquillian.container</groupId>
-			<artifactId>arquillian-tomcat-embedded-7</artifactId>
-			<version>1.0.0.CR5</version>
-			<scope>test</scope>
-		</dependency>
-
 
 		<!-- test framework -->
 		<dependency>
@@ -245,15 +239,159 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.12</version>
+				<version>2.15</version>
 				<configuration>
 					<forkMode>always</forkMode> <!-- integration tests require it -->
+					<includes>
+						<include>${test.include}</include>
+					</includes>
 				</configuration>
 			</plugin>
+
+			<!-- interpolates and copies arquillian.xml -->
+			<plugin> 
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-arquillian</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>process-test-resources</phase>
+						<configuration>
+							<outputDirectory>src/test/resources</outputDirectory>
+							<overwrite>true</overwrite>
+							<encoding>UTF-8</encoding>
+							<resources>
+								<resource>
+									<directory>${resources.directory}/${test.environment}</directory>
+									<includes>
+										<include>arquillian.xml</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 
 	<profiles>
+
+		<profile>
+			<id>tomcat-embedded</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<test.environment>embedded</test.environment>
+				<test.include>**/embedded/*Test.java</test.include>
+			</properties>
+			<dependencies>
+
+				<dependency>
+					<groupId>org.jboss.arquillian.container</groupId>
+					<artifactId>arquillian-tomcat-embedded-7</artifactId>
+					<version>1.0.0.CR5</version>
+					<scope>test</scope>
+				</dependency>
+
+			</dependencies>
+		</profile>
+
+
+
+		<profile>
+
+			<id>tomcat-managed</id>
+			<properties>
+				<test.environment>managed</test.environment>
+				<test.include>**/managed/Managed*.java</test.include>
+			</properties>
+			<dependencies>
+
+				<dependency>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>tomcat</artifactId>
+					<version>${tomcat.version}</version>
+					<type>zip</type>
+					<scope>test</scope>
+				</dependency>
+
+				<dependency>
+					<groupId>org.jboss.arquillian.container</groupId>
+					<artifactId>arquillian-tomcat-managed-7</artifactId>
+					<version>1.0.0.CR5</version>
+					<scope>test</scope>
+				</dependency>
+
+			</dependencies>
+			<build>
+				<plugins>
+
+					<plugin>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>install-tomcat</id>
+								<phase>generate-test-resources</phase><!-- runs before tests -->
+								<configuration>
+									<includeArtifactIds>tomcat</includeArtifactIds>
+									<includeTypes>zip</includeTypes>
+									<overWriteIfNewer>false</overWriteIfNewer>
+									<outputDirectory>${basedir}</outputDirectory>
+								</configuration>
+								<goals>
+									<goal>unpack-dependencies</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-surefire-plugin</artifactId> 
+						<version>2.15</version> <configuration> <systemProperties> <arquillian.launch>tomcat-managed</arquillian.launch> 
+						</systemProperties> </configuration> </plugin> -->
+
+					<!-- interpolates tomcat-users.xml -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>2.6</version>
+						<executions>
+							<execution>
+								<id>copy-tomcat-users</id>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<phase>process-test-resources</phase>
+								<configuration>
+									<outputDirectory>${basedir}/apache-tomcat-${tomcat.version}/conf</outputDirectory>
+									<overwrite>true</overwrite>
+									<encoding>UTF-8</encoding>
+									<resources>
+										<resource>
+											<directory>${resources.directory}/${test.environment}</directory>
+											<includes>
+												<include>tomcat-users.xml</include>
+											</includes>
+											<filtering>true</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+				</plugins>
+			</build>
+		</profile>
+
+
 		<profile>
 			<id>fao-ci</id>
 			<distributionManagement>

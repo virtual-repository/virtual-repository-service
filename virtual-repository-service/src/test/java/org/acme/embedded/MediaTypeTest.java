@@ -1,4 +1,4 @@
-package org.acme;
+package org.acme.embedded;
 
 import static org.junit.Assert.*;
 

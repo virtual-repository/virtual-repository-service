@@ -5,9 +5,11 @@
 
 	<container qualifier="tomcat" default="true">
 		<configuration>
-			<property name="bindHttpPort">9999</property>
+			<property name="catalinaHome">${basedir}/apache-tomcat-${tomcat.version}</property>
+			<property name="user">tomcat</property>
+			<property name="pass">tomcat</property>
 		</configuration>
 	</container>
-	
+
 </arquillian>
 	

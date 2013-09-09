@@ -1,4 +1,4 @@
-package org.acme;
+package org.acme.embedded;
 
 import static javax.ws.rs.core.MediaType.*;
 import static org.acme.utils.TestUtils.*;

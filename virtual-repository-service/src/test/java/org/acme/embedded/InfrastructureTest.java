@@ -1,4 +1,4 @@
-package org.acme;
+package org.acme.embedded;
 
 import static com.sun.jersey.api.client.ClientResponse.Status.*;
 import static javax.ws.rs.core.HttpHeaders.*;

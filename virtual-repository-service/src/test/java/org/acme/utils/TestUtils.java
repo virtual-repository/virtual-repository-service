@@ -33,13 +33,35 @@ public class TestUtils {
 	public static String at(URL base,String resource) {
 		return base+restRoot+resource;
 	}
+	
 	public static WebArchive war() {
 
 		WebArchive war = addWebInfResourcesTo(create(WebArchive.class, warName)
-				.addAsResource(new File("src/main/resources"))
+				.addAsResource(new File("src/main/resources/configuration.properties"))
+				.addAsResource(new File("src/main/resources/logback.xml"))
 				.addPackages(true, "org.virtualrepository.service")
 				.addAsLibraries(
 						Maven.resolver().loadPomFromFile("pom.xml").importRuntimeDependencies().resolve()
+								.withTransitivity().asFile())
+				);
+				
+		
+
+		System.out.println(war.toString(true));
+
+		return war;
+
+	}
+	
+	public static WebArchive warWithTests() {
+
+		WebArchive war = addWebInfResourcesTo(create(WebArchive.class, warName)
+				.addAsResource(new File("src/main/resources/configuration.properties"))
+				.addAsResource(new File("src/main/resources/logback.xml"))
+				.addPackages(true, "org.virtualrepository.service")
+				.addPackages(true, "org.acme")
+				.addAsLibraries(
+						Maven.resolver().loadPomFromFile("pom.xml").importRuntimeAndTestDependencies().resolve()
 								.withTransitivity().asFile())
 				);
 				
