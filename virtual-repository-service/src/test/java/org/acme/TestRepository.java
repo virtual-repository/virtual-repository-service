@@ -11,6 +11,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Singleton;
 
 import org.virtualrepository.Asset;
+import org.virtualrepository.Property;
 import org.virtualrepository.RepositoryService;
 import org.virtualrepository.VirtualRepository;
 import org.virtualrepository.csv.CsvCodelist;
@@ -25,8 +26,11 @@ public class TestRepository {
 	public static List<Asset> sdmxAssets = new ArrayList<Asset>();
 	
 	public static String csv_id1 = "id1";
+	public static CsvCodelist csv_1;
+	public static CsvCodelist csv_2;
 	public static String csv_id2 = "id2";
 	public static String sdmx_id1 = "urn://acme.org";
+	public static SdmxCodelist sdmx_1;
 	
 	public static final String test_service = "test-service";
 	
@@ -34,9 +38,18 @@ public class TestRepository {
 	@SuppressWarnings("all")
 	public static VirtualRepository repository() throws Exception {
 		
-		csvAssets.add(new CsvCodelist(csv_id1, "standardName", 0));
-		csvAssets.add(new CsvCodelist(csv_id2, "standardName", 0));
-		sdmxAssets.add(new SdmxCodelist(sdmx_id1, "id", "1.0", "standardName"));
+		
+		csv_1 = new CsvCodelist(csv_id1, "standardName", 0);
+		Property privateProperty = new Property("private","hello");
+		privateProperty.display(false);
+		csv_1.properties().add(new Property("public","hello"), privateProperty);
+		csvAssets.add(csv_1);
+		
+		csv_2 = new CsvCodelist(csv_id2, "standardName", 0);
+		csvAssets.add(csv_2);
+		
+		sdmx_1= new SdmxCodelist(sdmx_id1, "id", "1.0", "standardName");
+		sdmxAssets.add(sdmx_1);
 
 		ServiceProxy proxy1 = aProxy().with(anImporterFor(CsvCodelist.type)).get();
 		ServiceProxy proxy2 = aProxy().with(anImporterFor(SdmxCodelist.type)).get();
