@@ -7,9 +7,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.virtualrepository.AssetType;
 import org.virtualrepository.RepositoryService;
 import org.virtualrepository.VirtualRepository;
+import org.virtualrepository.impl.Services;
 import org.virtualrepository.service.Constants;
 
 @Singleton
@@ -28,12 +30,14 @@ public class Configuration {
 
 	private static final Logger log = LoggerFactory.getLogger(Configuration.class);
 	
-	private final Properties properties;
+	private String name;
+	private String version;
+	private int ttl = default_ttl;
+	
 	private final VirtualRepository repository;
 	
 	@Inject
 	public Configuration(VirtualRepository repository) {
-		this.properties = new Properties();
 		this.repository=repository;
 	}
 	
@@ -42,12 +46,20 @@ public class Configuration {
 		
 		try {
 			
-			loadProperties();
+			Properties properties=loadProperties();
 			
-			if (!areValidProperties())
-				throw new RuntimeException("missing required properties or invalid properties in "+properties.keySet());
+			List<String> errors = errorsIn(properties); 
 			
-			addDerivedProperties();
+			if (!errors.isEmpty())
+				throw new RuntimeException("invalid configuration: "+errors);
+			
+			//static properties
+			name= properties.getProperty(config_endpoint_name);
+
+			if (properties.containsKey(config_ttl_name))
+				ttl = (Integer) properties.get(config_ttl_name);
+			
+			version = properties.getProperty(config_virtual_repository);
 			
 			log.info("initialised configuration "+this);
 			
@@ -60,10 +72,18 @@ public class Configuration {
 		
 	}
 	
+	public String version() {
+		return version;
+	}
+	
+	public String name() {
+		return name;
+	}
+	
 	
 	public int responseTTL() {
 		
-		return (Integer) properties.get(config_ttl_name);
+		return ttl;
 	}
 	
 	public AssetType[] assetTypes() {
@@ -78,26 +98,16 @@ public class Configuration {
 		return types.toArray(new AssetType[0]);
 	}
 	
-	
-	public Properties properties() {
-		return properties;
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("[");
-		for (Map.Entry<Object,Object> e : properties.entrySet())
-			builder.append(e.getKey()+"="+e.getValue()+" ");
-		builder.append("]");
-		return builder.toString();
+	public Services repositories() {
+		
+		return repository.services();
 	}
 	
 	
 	//helpers
 	
 	
-	private void loadProperties() throws Exception {
+	private Properties loadProperties() throws Exception {
 		
 		InputStream configStream = getClass().getResourceAsStream("/"+configFile);
 		if (configStream==null)
@@ -105,32 +115,28 @@ public class Configuration {
 		
 		Reader configReader = new InputStreamReader(configStream, Charset.forName("UTF-8"));
 		
-		this.properties.load(configReader);
+		Properties properties = new Properties();
+		properties.load(configReader);
+		return properties;
 	}
 	
-	private boolean areValidProperties() {
+	private List<String> errorsIn(Properties properties) {
 		
-		return 
-			properties.containsKey(config_endpoint_name) &&
-			properties.containsKey(config_virtual_repository) && 
-			(!properties.containsKey(config_ttl_name) ||
-				isNumber((String)properties.get(config_ttl_name))
-			);
-	}
-	
-	private void addDerivedProperties() {
+		String missing = "missing required property ";
+		String invalid = "invalid property ";
 		
-		Collection<String> names = new HashSet<String>();
+		List<String> errors = new ArrayList<String>();
 		
-		for(AssetType type : assetTypes())
-			names.add(type.name());
+		if (!properties.containsKey(config_endpoint_name) )
+			errors.add(missing+config_endpoint_name);
 		
-		properties.put(config_types_name,names);
+		if (!properties.containsKey(config_virtual_repository) )
+			errors.add(missing+config_virtual_repository);
 		
-		if (!properties.containsKey(config_ttl_name))
-			properties.put(config_ttl_name, default_ttl_);
+		if (properties.containsKey(config_ttl_name) && !isNumber((String)properties.get(config_ttl_name)))
+			errors.add(invalid+config_ttl_name);
 		
-		properties.put(config_repositories_name,repository.services());
+		return errors;
 	}
 	
 	private boolean isNumber(String s) {
@@ -141,5 +147,10 @@ public class Configuration {
 		catch(NumberFormatException e) {
 			return false;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Configuration [name=" + name + ", version=" + version + ", ttl=" + ttl + "]";
 	}
 }

@@ -28,7 +28,7 @@ public class Constants {
 	/**
 	 * The default time-to-leave of responses.
 	 */
-	public static final int default_ttl_ = 3600;
+	public static final int default_ttl = 3600;
 	
 	/**
 	 * The name of the configuration property with the time-to-live of responses.
