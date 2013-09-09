@@ -125,10 +125,12 @@ public class Configuration {
 		for(AssetType type : assetTypes())
 			names.add(type.name());
 		
-		properties.put(configTypesProperty,names);
+		properties.put(config_types_name,names);
 		
 		if (!properties.containsKey(config_ttl_name))
 			properties.put(config_ttl_name, default_ttl_);
+		
+		properties.put(config_repositories_name,repository.services());
 	}
 	
 	private boolean isNumber(String s) {

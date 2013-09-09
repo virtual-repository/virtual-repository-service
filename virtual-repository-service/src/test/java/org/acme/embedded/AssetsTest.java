@@ -8,7 +8,7 @@ import static org.dynamicvalues.Dynamic.*;
 import static org.junit.Assert.*;
 import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.rest.VrsMediaType.*;
-import static org.virtualrepository.service.rest.resources.AssetsResource.*;
+import static org.virtualrepository.service.rest.resources.Assets.*;
 
 import java.io.StringReader;
 import java.net.URL;

@@ -18,7 +18,7 @@ public class Constants {
 	/**
 	 * The name of the configuration property with the known asset types.
 	 */
-	public static final String configTypesProperty = "asset-types";
+	public static final String config_types_name = "asset-types";
 
 	/**
 	 * The name of the configuration property with the name of the service endpoint.
@@ -34,6 +34,12 @@ public class Constants {
 	 * The name of the configuration property with the time-to-live of responses.
 	 */
 	public static final String config_ttl_name = "response-ttl";
+	
+	
+	/**
+	 * The name of the configuration property with the time-to-live of responses.
+	 */
+	public static final String config_repositories_name = "repositories";
 
 	/**
 	 * The name of the configuration property with the version of the virtual repository.

@@ -5,7 +5,7 @@ package org.virtualrepository.service.rest.resources;
 
 import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.rest.errors.Error.*;
-import static org.virtualrepository.service.rest.resources.AssetsResource.*;
+import static org.virtualrepository.service.rest.resources.Assets.*;
 import static org.virtualrepository.service.utils.Utils.*;
 
 import java.util.ArrayList;
@@ -42,9 +42,9 @@ import org.virtualrepository.service.utils.Utils;
 @Path(path)
 @Singleton
 @Produces({jmom,xmom,xobject})
-public class AssetsResource implements Cacheable {
+public class Assets implements Cacheable {
 
-	private static Logger log = LoggerFactory.getLogger(AssetsResource.class);
+	private static Logger log = LoggerFactory.getLogger(Assets.class);
 	
 	public static final String path = "/assets";
 	public static final String typeParam = "type";
@@ -55,7 +55,7 @@ public class AssetsResource implements Cacheable {
 	private Calendar lastRefresh;
 
 	@Inject
-	public AssetsResource(VirtualRepository repository, Configuration configuration) {
+	public Assets(VirtualRepository repository, Configuration configuration) {
 
 		this.repository = repository;
 		this.configuration = configuration;

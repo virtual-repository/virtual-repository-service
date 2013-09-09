@@ -4,7 +4,7 @@
 package org.virtualrepository.service.rest.resources;
 
 import static org.virtualrepository.service.Constants.*;
-import static org.virtualrepository.service.rest.resources.ServiceDescriptionResource.*;
+import static org.virtualrepository.service.rest.resources.Description.*;
 
 import java.util.Properties;
 
@@ -26,7 +26,7 @@ import org.virtualrepository.service.configuration.Configuration;
  */
 @Path(path)
 @Singleton
-public class ServiceDescriptionResource {
+public class Description {
 	
 	public static final String path = "/";
 	
@@ -34,7 +34,7 @@ public class ServiceDescriptionResource {
 	
 
 	@Inject
-	public ServiceDescriptionResource(Configuration configuration) {
+	public Description(Configuration configuration) {
 	
 		this.configuration=configuration;
 	}
