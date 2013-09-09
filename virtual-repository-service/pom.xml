@@ -10,6 +10,7 @@
 	<name>Virtual Repository Service</name>
 
 	<properties>
+		<vr.version>1.0.0</vr.version>
 		<jersey.version>1.17.1</jersey.version>
 		<weld.version>2.0.3.Final</weld.version>
 		<tomcat.version>7.0.42</tomcat.version>
@@ -248,12 +249,12 @@
 				</configuration>
 			</plugin>
 
-			<!-- interpolates and copies arquillian.xml -->
-			<plugin> 
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.6</version>
 				<executions>
+					<!-- interpolates and copies arquillian.xml -->
 					<execution>
 						<id>copy-arquillian</id>
 						<goals>
@@ -275,6 +276,29 @@
 							</resources>
 						</configuration>
 					</execution>
+					<!-- interpolates and copies configuration.properties -->
+					<execution>
+						<id>copy-configuration</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>process-resources</phase>
+						<configuration>
+							<outputDirectory>src/main/resources</outputDirectory>
+							<overwrite>true</overwrite>
+							<encoding>UTF-8</encoding>
+							<resources>
+								<resource>
+									<directory>${resources.directory}</directory>
+									<includes>
+										<include>configuration.properties</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+
 				</executions>
 			</plugin>
 

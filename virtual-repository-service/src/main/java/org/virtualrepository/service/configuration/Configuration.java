@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -46,7 +47,10 @@ public class Configuration {
 		
 		try {
 			
-			Properties properties=loadProperties();
+			Properties properties=loadProperties("/"+config_external_file);
+			
+			for (Map.Entry<Object,Object> p : loadProperties("/"+config_internal_file).entrySet())
+				properties.put(p.getKey(),p.getValue());
 			
 			List<String> errors = errorsIn(properties); 
 			
@@ -57,7 +61,7 @@ public class Configuration {
 			name= properties.getProperty(config_endpoint_name);
 
 			if (properties.containsKey(config_ttl_name))
-				ttl = (Integer) properties.get(config_ttl_name);
+				ttl = Integer.valueOf(properties.getProperty(config_ttl_name));
 			
 			version = properties.getProperty(config_virtual_repository);
 			
@@ -107,11 +111,11 @@ public class Configuration {
 	//helpers
 	
 	
-	private Properties loadProperties() throws Exception {
+	private Properties loadProperties(String location) throws Exception {
 		
-		InputStream configStream = getClass().getResourceAsStream("/"+configFile);
+		InputStream configStream = getClass().getResourceAsStream(location);
 		if (configStream==null)
-			throw new RuntimeException("missing configuration file "+Constants.configFile);
+			throw new RuntimeException("missing configuration file "+Constants.config_internal_file);
 		
 		Reader configReader = new InputStreamReader(configStream, Charset.forName("UTF-8"));
 		

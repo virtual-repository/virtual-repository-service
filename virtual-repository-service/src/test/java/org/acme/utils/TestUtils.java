@@ -38,6 +38,7 @@ public class TestUtils {
 
 		WebArchive war = addWebInfResourcesTo(create(WebArchive.class, warName)
 				.addAsResource(new File("src/main/resources/configuration.properties"))
+				.addAsResource(new File("src/test/resources/vrs.properties"))
 				.addAsResource(new File("src/main/resources/logback.xml"))
 				.addPackages(true, "org.virtualrepository.service")
 				.addAsLibraries(

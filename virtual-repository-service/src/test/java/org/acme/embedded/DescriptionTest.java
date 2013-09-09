@@ -1,8 +1,8 @@
 package org.acme.embedded;
 
-import static javax.ws.rs.core.MediaType.*;
 import static org.acme.utils.TestUtils.*;
 import static org.dynamicvalues.Dynamic.*;
+import static org.virtualrepository.service.rest.VrsMediaType.*;
 import static org.virtualrepository.service.rest.resources.Description.*;
 
 import java.io.StringReader;
@@ -35,7 +35,7 @@ public class DescriptionTest {
 		
 		//note: tests are independent of service URIs
 		
-		String outcome = call().resource(at(context,path)).accept(APPLICATION_JSON).get(String.class);
+		String outcome = call().resource(at(context,path)).accept(JMOM.toString()).get(String.class);
 		
 		JSONDeserializer<Map<?,?>> deserializer = new JSONDeserializer<Map<?,?>>();
 		
@@ -48,7 +48,7 @@ public class DescriptionTest {
 	@Test
 	public void inXml(@ArquillianResource URL context) throws Exception {
 		
-		String outcome = call().resource(at(context,path)).accept(APPLICATION_XML).get(String.class);
+		String outcome = call().resource(at(context,path)).accept(XMOM.toString()).get(String.class);
 		
 		Unmarshaller um = DynamicIO.newInstance().createUnmarshaller();
 		

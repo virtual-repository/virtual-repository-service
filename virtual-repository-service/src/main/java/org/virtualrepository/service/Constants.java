@@ -11,9 +11,15 @@ import javax.ws.rs.core.MediaType;
 public class Constants {
 
 	/**
-	 * The name of the configuration file.
+	 * The name of the internal configuration file.
 	 */
-	public static final String configFile = "configuration.properties";
+	public static final String config_internal_file = "configuration.properties";
+	
+	
+	/**
+	 * The name of the external configuration file.
+	 */
+	public static final String config_external_file = "vrs.properties";
 
 	/**
 	 * The name of the configuration property with the known asset types.
