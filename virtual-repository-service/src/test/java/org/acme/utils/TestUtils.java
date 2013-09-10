@@ -1,10 +1,17 @@
 package org.acme.utils;
 
+import static java.util.Arrays.*;
 import static org.jboss.shrinkwrap.api.ShrinkWrap.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
 
 import org.acme.utils.TestMocks.AssetBuilder;
 import org.acme.utils.TestMocks.ProxyBuilder;
@@ -17,9 +24,14 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.mockito.Mockito;
 import org.virtualrepository.Asset;
+import org.virtualrepository.Property;
 import org.virtualrepository.impl.Type;
 import org.virtualrepository.spi.Importer;
 import org.virtualrepository.spi.Publisher;
+import org.virtualrepository.tabular.Column;
+import org.virtualrepository.tabular.DefaultTable;
+import org.virtualrepository.tabular.Row;
+import org.virtualrepository.tabular.Table;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.filter.LoggingFilter;
@@ -153,5 +165,37 @@ public class TestUtils {
 		when(importer.type()).thenReturn(type);
 		when(importer.api()).thenReturn(api);
 		return importer;
+	}
+	
+	
+	public static Table twoBytwoTable() {
+		
+		List<String[]> csv = new ArrayList<String[]>();
+		for (int c =0; c<2;c++) {
+			List<String> row = new ArrayList<String>();
+			for (int r=0;r<2;r++)
+				row.add(""+r+c);
+			csv.add(row.toArray(new String[0]));
+		}
+		
+		String[][] data = csv.toArray(new String[0][]);
+		
+		
+		Column col1 = new Column(new QName("http://acme.org","col1"));
+		col1.setKind(new QName("http://acme.org","name"));
+		col1.properties().add(new Property("prop1","val1"));
+		Column col2 = new Column(new QName("col2"));
+		
+		Column[] columns = new Column[]{col1,col2};
+		List<Row> rows = new ArrayList<Row>();
+		for (String[] row : data) {
+			Map<QName,String> map = new HashMap<QName, String>(); 
+			for (int i=0;i<row.length;i++)
+					map.put(columns[i].name(),row[i]);
+			
+			rows.add(new Row(map));	
+		}
+		
+		return new DefaultTable(asList(columns),rows);
 	}
 }

@@ -3,6 +3,9 @@ package org.virtualrepository.service.rest.providers;
 import static javax.ws.rs.core.MediaType.*;
 import static javax.ws.rs.core.Response.Status.*;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -38,7 +41,9 @@ public class ErrorBarrier {
 	
 	
 	private static Response response(Status status, Exception e) {
-		return Response.status(status).entity(e.getMessage()).type(TEXT_PLAIN).build();
+		StringWriter writer = new StringWriter();
+		e.printStackTrace(new PrintWriter(writer));
+		return Response.status(status).entity(writer.toString()).type(TEXT_PLAIN).build();
 		
 	}
 	

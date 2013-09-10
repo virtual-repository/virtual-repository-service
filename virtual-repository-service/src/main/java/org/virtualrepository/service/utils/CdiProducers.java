@@ -4,6 +4,9 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.inject.Singleton;
 
+import org.sdmx.SdmxServiceFactory;
+import org.sdmxsource.sdmx.api.manager.output.StructureWritingManager;
+import org.sdmxsource.sdmx.api.manager.parse.StructureParsingManager;
 import org.virtualrepository.VirtualRepository;
 import org.virtualrepository.impl.Repository;
 
@@ -28,5 +31,25 @@ public class CdiProducers {
 		produced =  testRepo.isUnsatisfied()?new Repository():testRepo.get();
 				
 		return produced;
+	}
+	
+	/**
+	 * Returns a {@link StructureParsingManager} service.
+	 * 
+	 * @return the service
+	 */
+	@Produces @Singleton
+	public static StructureParsingManager parser() {
+		return SdmxServiceFactory.parser();
+	}
+
+	/**
+	 * Returns a {@link StructureWritingManager} service.
+	 * 
+	 * @return the service
+	 */
+	@Produces @Singleton
+	public static StructureWritingManager writer() {
+		return SdmxServiceFactory.writer();
 	}
 }

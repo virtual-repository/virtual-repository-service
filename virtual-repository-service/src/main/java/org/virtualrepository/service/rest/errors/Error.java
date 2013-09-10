@@ -20,7 +20,13 @@ public enum Error {
 	/**
 	 * The error raised when requests are made to failed applications.
 	 */
-	no_such_asset(NOT_FOUND,"this resource is not currently available")
+	no_such_asset(NOT_FOUND,"this resource is not currently available"),
+	
+	
+		/**
+	 * The error raised when requests are made to failed applications.
+	 */
+	invalid_mediatype(NOT_ACCEPTABLE,"this resource is not currently available in the required type")
 	
 	//to be continued
 	

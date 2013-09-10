@@ -23,6 +23,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import org.virtualrepository.Asset;
 import org.virtualrepository.AssetType;
 import org.virtualrepository.VirtualRepository;
 import org.virtualrepository.service.configuration.Configuration;
+import org.virtualrepository.service.rest.VrsMediaType;
 import org.virtualrepository.service.utils.Utils;
 
 /**
@@ -41,7 +43,6 @@ import org.virtualrepository.service.utils.Utils;
  */
 @Path(path)
 @Singleton
-@Produces({jmom,xmom,xobject})
 public class Assets implements Cacheable {
 
 	private static Logger log = LoggerFactory.getLogger(Assets.class);
@@ -68,19 +69,7 @@ public class Assets implements Cacheable {
 	}
 
 	@GET
-	@Path("{id}")
-	public Asset getOne(@PathParam("id") String id) {
-
-		try {
-			return repository.lookup(id);
-		}
-		catch(IllegalStateException e) {
-			throw no_such_asset.toException("unknown asset "+id);
-		}
-		
-	}
-	
-	@GET
+	@Produces({jmom,xmom,xobject})
 	public Collection<Asset> get(@QueryParam(typeParam) List<String> typeNames) {
 
 		
@@ -94,10 +83,8 @@ public class Assets implements Cacheable {
 
 	}
 	
-	
-
-
 	@POST
+	@Produces({jmom,xmom,xobject})
 	public Collection<Asset> refreshAndGet(@QueryParam(typeParam) List<String> typeNames) {
 
 		refresh(typesFrom(typeNames));
@@ -105,7 +92,46 @@ public class Assets implements Cacheable {
 		return get(typeNames);
 	}
 
+	@GET
+	@Path("{id}")
+	@Produces({jmom,xmom,xobject})
+	public Asset getOne(@PathParam("id") String id) {
+
+		try {
+			return repository.lookup(id);
+		}
+		catch(IllegalStateException e) {
+			throw no_such_asset.toException("unknown asset "+id);
+		}
+		
+	}
+	
+	@GET
+	@Path("{id}")
+	@Produces({sdmx_ml,jtable,xtable,vtable})
+	public Object getOneContent(@PathParam("id") String id, @Context VrsMediaType type) {
+
+		Asset asset = getOne(id);
+		
+		try {
+			return repository.retrieve(asset, type.api());
+			
+		}
+		catch(IllegalStateException e) {
+			throw invalid_mediatype.toException(e);
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 	// helpers
+	
+	
 	Collection<AssetType> typesFrom(List<String> typeNames) {
 
 		List<AssetType> types = new ArrayList<AssetType>();

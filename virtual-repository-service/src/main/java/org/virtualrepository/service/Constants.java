@@ -68,10 +68,28 @@ public class Constants {
 	public static final String xmom = MediaType.APPLICATION_XML;
 
 	/**
-	 * Suffix for secondary media types.
+	 * SMDXML-based exchange media type.
 	 */
-	public static final String SECONDARY = ";q=0.9";
-
+	public static final String sdmx_ml = "application/vnd.sdmx.structure+xml;version=2.1";
+	
+	
+	/**
+	 * JSon-based exchange media type for tables.
+	 */
+	public static final String jtable = "application/vnd.vr.tabular+json;version=1";
+	
+	/**
+	 * Xml-based exchange media type for tables.
+	 */
+	public static final String xtable = "application/vnd.vr.tabular+xml;version=1";
+	
+	
+	/**
+	 * Xml-based serialisation media type for tables.
+	 */
+	public static final String vtable = "application/vnd.vr.tabular+vxml;version=1";
+	
+	
 	/**
 	 * Custom XML serialisation media type.
 	 */

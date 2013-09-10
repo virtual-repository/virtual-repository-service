@@ -221,6 +221,50 @@ public class AssetsTest {
 
 	}
 	
+	
+	@Test
+	public void oneInSdmxML(@ArquillianResource URL context) throws Exception {
+
+		call().resource(at(context,path)).path(sdmx_id1).accept(SDMX_ML.type()).get(String.class);
+
+
+	}
+
+	@Test
+	public void tableInJson(@ArquillianResource URL context) throws Exception {
+
+		call().resource(at(context,path)).path(csv_id1).accept(JTABLE.type()).get(String.class);
+
+
+	}
+	
+	@Test
+	public void tableInXml(@ArquillianResource URL context) throws Exception {
+
+		call().resource(at(context,path)).path(csv_id1).accept(XTABLE.type()).get(String.class);
+
+	}
+	
+	@Test
+	public void tableInVXml(@ArquillianResource URL context) throws Exception {
+
+		call().resource(at(context,path)).path(csv_id1).accept(VTABLE.type()).get(String.class);
+
+	}
+
+	@Test
+	public void oneUsingUnsupportedType(@ArquillianResource URL context) throws Exception {
+
+		try {
+			call().resource(at(context,path)).path(csv_id1).accept("unsupported").get(String.class);
+			fail();
+		}
+		catch(UniformInterfaceException e) {
+			assertEquals(NOT_ACCEPTABLE,e.getResponse().getClientResponseStatus());
+		}
+
+
+	}
 	@Test
 	public void badoneInJson(@ArquillianResource URL context) throws Exception {
 

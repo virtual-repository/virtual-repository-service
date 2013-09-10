@@ -42,7 +42,7 @@ public class RepresentationHandler implements MessageBodyWriter<Object> {
 		//dispatches conversion to based on media type
 		
 		VrsMediaType negotiated = VrsMediaType.fromMediaType(mediaType);
-		
+		System.out.println(negotiated);
 		entityStream.write(negotiated.bind(object).with(binder).getBytes());
 		
 	}
