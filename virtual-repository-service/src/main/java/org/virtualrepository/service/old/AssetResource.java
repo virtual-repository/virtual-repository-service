@@ -1,7 +1,7 @@
 /**
  * (c) 2013 FAO / UN (project: virtual-produced-service)
  */
-package org.virtualrepository.service.rest.resources;
+package org.virtualrepository.service.old;
 
 import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.utils.Utils.*;
