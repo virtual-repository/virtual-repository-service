@@ -5,6 +5,7 @@ package org.virtualrepository.service.rest;
 
 import static javax.ws.rs.core.Response.*;
 import static org.junit.Assert.*;
+import static org.virtualrepository.service.Constants.*;
 import static org.virtualrepository.service.rest.TestService.*;
 
 import javax.inject.Inject;
@@ -13,7 +14,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.namespace.QName;
@@ -57,7 +57,7 @@ public class TestService  {
 	
 	@GET
 	@Path(negotiated_path)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(jmom)
 	public Object negotiated() {
 		
 		@SuppressWarnings("unused")
@@ -70,7 +70,7 @@ public class TestService  {
 	
 	@GET
 	@Path(adapted_path)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(jmom)
 	public String adapted(@Context UriInfo info) {
 		
 		System.out.println(info.getQueryParameters());

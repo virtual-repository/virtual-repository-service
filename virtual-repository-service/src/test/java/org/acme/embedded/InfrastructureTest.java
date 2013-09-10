@@ -2,7 +2,6 @@ package org.acme.embedded;
 
 import static com.sun.jersey.api.client.ClientResponse.Status.*;
 import static javax.ws.rs.core.HttpHeaders.*;
-import static javax.ws.rs.core.MediaType.*;
 import static org.acme.utils.TestUtils.*;
 import static org.junit.Assert.*;
 import static org.virtualrepository.service.rest.TestService.*;
@@ -50,7 +49,7 @@ public class InfrastructureTest {
 		ClientResponse response = call().resource(at(root,path+negotiated_path)).accept(JMOM.toString()).get(ClientResponse.class);
 
 		assertEquals(OK, response.getClientResponseStatus());
-		assertEquals(APPLICATION_JSON_TYPE, response.getType());
+		assertEquals(JMOM.type(), response.getType());
 
 	}
 
@@ -60,7 +59,7 @@ public class InfrastructureTest {
 		ClientResponse response = call().resource(at(root,path+negotiated_path)).get(ClientResponse.class);
 
 		assertEquals(OK, response.getClientResponseStatus());
-		assertEquals(APPLICATION_JSON_TYPE, response.getType());
+		assertEquals(JMOM.type(), response.getType());
 
 	}
 
