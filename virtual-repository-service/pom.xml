@@ -85,20 +85,30 @@
 		</dependency>
 
 
-		<!-- dependency injection -->
+		<!-- CDI dependency injection -->
 
 		<!-- note: we stay away from the single weld-servlet artefact, a shaded 
 			jar that bring along undesired stuff, such as sl4j-simple -->
+	
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<version>1.1</version>
+			<scope>compile</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.jboss.weld.servlet</groupId>
 			<artifactId>weld-servlet-core</artifactId>
 			<version>${weld.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-core</artifactId>
 			<version>${weld.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<!-- rest runtime -->
@@ -232,8 +242,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.0.2</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 
