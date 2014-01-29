@@ -79,7 +79,7 @@ public class Binder {
 		
 		vxmlOut = new XStream();
 		vxmlOut.omitField(RepositoryService.class, "proxy");
-		vxmlOut.setMode(XStream.ID_REFERENCES);
+		//vxmlOut.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
 		
 		
 	}

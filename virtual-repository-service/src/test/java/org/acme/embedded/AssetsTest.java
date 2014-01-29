@@ -180,7 +180,6 @@ public class AssetsTest {
 		
 	}
 	
-	
 	@Test
 	public void inXml(@ArquillianResource URL context) throws Exception {
 
@@ -199,6 +198,9 @@ public class AssetsTest {
 
 		String outcome = call().resource(at(context, path)).accept(XOBJECT.type()).get(String.class);
 
+
+		System.out.println(outcome);
+		
 		List<?> list = (List<?>) new XStream(new StaxDriver()).fromXML(outcome);
 
 		assertEquals(csvAssets.size() + sdmxAssets.size(), list.size());

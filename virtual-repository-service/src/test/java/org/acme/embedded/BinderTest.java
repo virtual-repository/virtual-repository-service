@@ -61,6 +61,8 @@ public class BinderTest {
 		
 		String bound = binder.vxml(assets);
 		
+		System.out.println(bound);
+		
 		List<?> read = (List<?>) new XStream(new StaxDriver()).fromXML(bound);
 		
 		//System.out.println(read);
