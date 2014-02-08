@@ -22,9 +22,10 @@ import org.dynamicvalues.Directives;
 import org.dynamicvalues.Dynamic;
 import org.dynamicvalues.DynamicIO;
 import org.dynamicvalues.Exclusion;
-import org.sdmxsource.sdmx.api.manager.output.StructureWritingManager;
+import org.sdmxsource.sdmx.api.manager.output.StructureWriterManager;
 import org.sdmxsource.sdmx.api.model.beans.SdmxBeans;
 import org.sdmxsource.sdmx.api.model.beans.base.MaintainableBean;
+import org.sdmxsource.sdmx.sdmxbeans.model.SdmxStructureFormat;
 import org.sdmxsource.sdmx.util.beans.container.SdmxBeansImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,11 +68,11 @@ public class Binder {
 	private final JAXBContext xmlOut;
 	private final XStream vxmlOut;
 	
-	private final StructureWritingManager sdmxWriter;
+	private final StructureWriterManager sdmxWriter;
 	
 	
 	@Inject
-	public Binder(StructureWritingManager sdmxWriter) {
+	public Binder(StructureWriterManager sdmxWriter) {
 		
 		this.sdmxWriter = sdmxWriter;
 		jsonOut = new JSONSerializer().exclude(JSON_DEFAULT_EXCLUSION_PATTERNS);
@@ -125,7 +126,7 @@ public class Binder {
 			
 			ByteArrayOutputStream stream = new ByteArrayOutputStream(1024);
 			
-			sdmxWriter.writeStructures(beans, SDMX_V21_STRUCTURE_DOCUMENT, stream);
+			sdmxWriter.writeStructures(beans, new SdmxStructureFormat(SDMX_V21_STRUCTURE_DOCUMENT), stream);
 			
 			return new String(stream.toByteArray());
 			

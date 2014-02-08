@@ -5,7 +5,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Singleton;
 
 import org.sdmx.SdmxServiceFactory;
-import org.sdmxsource.sdmx.api.manager.output.StructureWritingManager;
+import org.sdmxsource.sdmx.api.manager.output.StructureWriterManager;
 import org.sdmxsource.sdmx.api.manager.parse.StructureParsingManager;
 import org.virtualrepository.VirtualRepository;
 import org.virtualrepository.impl.Repository;
@@ -49,7 +49,7 @@ public class CdiProducers {
 	 * @return the service
 	 */
 	@Produces @Singleton
-	public static StructureWritingManager writer() {
+	public static StructureWriterManager writer() {
 		return SdmxServiceFactory.writer();
 	}
 }
